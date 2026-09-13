@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Магия: Учебная битва</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="fx-layer"></div>
+<div id="red-flash"></div>
+
+<div id="hud">
+  <!-- opponent -->
+  <div id="opp-panel" class="player-panel top">
+    <div class="avatar">🤖</div>
+    <div class="pinfo">
+      <div class="pname">Компьютер <span class="deckname" id="opp-deck"></span></div>
+      <div class="life-row"><span class="heart">❤️</span><span class="life" id="opp-life">20</span></div>
+      <div class="counts">🃏 <span id="opp-hand">0</span> &nbsp; 📚 <span id="opp-lib">0</span> &nbsp; 🪦 <span id="opp-gy">0</span> &nbsp; 🏔️ <span id="opp-lands">0/0</span></div>
+      <div class="pool" id="opp-pool"></div>
+    </div>
+  </div>
+
+  <!-- me -->
+  <div id="my-panel" class="player-panel bottom">
+    <div class="avatar">🧒</div>
+    <div class="pinfo">
+      <div class="pname">Вы <span class="deckname" id="my-deck"></span></div>
+      <div class="life-row"><span class="heart">❤️</span><span class="life" id="my-life">20</span></div>
+      <div class="counts">🃏 <span id="my-hand">0</span> &nbsp; 📚 <span id="my-lib">0</span> &nbsp; 🪦 <span id="my-gy">0</span> &nbsp; 🏔️ <span id="my-lands">0/0</span></div>
+      <div class="pool" id="my-pool"></div>
+    </div>
+  </div>
+
+  <!-- phase track -->
+  <div id="phase-track">
+    <div id="turn-num" class="turn-num">Ход 1</div>
+    <div id="turn-label" class="turn-label">ВАШ ХОД</div>
+    <ul id="phases"></ul>
+  </div>
+  <div id="phase-hint"></div>
+
+  <div id="stack-panel" class="hidden"></div>
+
+  <div id="preview" class="hidden"><img alt=""><div class="ptext"></div></div>
+
+  <div id="action-bar">
+    <div id="hint"></div>
+    <div class="buttons">
+      <button id="btn-cancel" class="btn secondary hidden">Отмена</button>
+      <button id="btn-main" class="btn hidden">Далее</button>
+    </div>
+  </div>
+
+  <div id="log"></div>
+
+  <div id="topbar-right">
+    <button id="btn-log" class="icon" title="Журнал">📜</button>
+    <button id="btn-help" class="icon" title="Помощь">❓</button>
+    <button id="btn-sound" class="icon" title="Звук">🔊</button>
+  </div>
+
+  <div id="banner" class="banner"></div>
+</div>
+
+<!-- start screen -->
+<div id="start" class="overlay">
+  <div class="panel big">
+    <h1>✨ МАГИЯ ✨<small>Учебная битва против компьютера</small></h1>
+    <p class="lead">Выбери колоду. У каждого игрока 20 жизней. Кто первым опустит противника до нуля — победил!</p>
+    <div id="deck-picker"></div>
+    <label class="opt"><input type="checkbox" id="opt-full"> Останавливаться на каждой фазе (полный контроль)</label>
+    <div class="row">
+      <button id="btn-help-start" class="btn secondary">❓ Как играть</button>
+      <button id="btn-start" class="btn primary large">▶ Играть</button>
+    </div>
+  </div>
+</div>
+
+<!-- help -->
+<div id="help" class="overlay hidden">
+  <div class="panel">
+    <button class="close">✖</button>
+    <h2>Как играть</h2>
+    <div class="help-cols">
+      <div>
+        <h3>🎯 Цель</h3>
+        <p>У каждого 20 жизней. Опусти жизни противника до 0 — победа. Если у игрока закончились карты в библиотеке и он должен взять карту — он проиграл.</p>
+        <h3>🏔️ Земли и мана</h3>
+        <p>Один раз за ход можно положить <b>землю</b>. Земли <b>поворачиваются</b> и дают ману — ей платят за заклинания. В начале твоего хода всё разворачивается.</p>
+        <h3>🐺 Существа</h3>
+        <p>У существа есть <b>сила/выносливость</b> (например 3/2). Только что вышедшее существо «болеет» и не может атаковать до твоего следующего хода (если нет Ускорения).</p>
+        <h3>⚡ Стек</h3>
+        <p>Заклинания не действуют сразу — они попадают в <b>стек</b>. Противник может ответить мгновенным заклинанием. Стек разрешается сверху вниз: последнее сыгранное срабатывает первым.</p>
+      </div>
+      <div>
+        <h3>🔁 Фазы хода</h3>
+        <ol>
+          <li><b>Разворот</b> — все твои карты разворачиваются.</li>
+          <li><b>Поддержка, Взятие карты</b> — берёшь карту.</li>
+          <li><b>Главная фаза 1</b> — земли, существа, волшебства.</li>
+          <li><b>Бой</b>: объяви атакующих → противник объявляет блокирующих → урон.</li>
+          <li><b>Главная фаза 2</b> — можно доиграть карты.</li>
+          <li><b>Завершение, Очистка</b> — повреждения снимаются.</li>
+        </ol>
+        <h3>⚔️ Бой</h3>
+        <p>Атакующие поворачиваются. Незаблокированное существо бьёт игрока. Заблокированные существа бьют друг друга одновременно. Если урон ≥ выносливости — существо погибает.</p>
+        <h3>🪶 Ключевые слова</h3>
+        <p><b>Полёт</b> — блокируют только Полёт/Охват. <b>Первый удар</b> — бьёт раньше. <b>Пробивной удар</b> — лишний урон идёт игроку. <b>Бдительность</b> — не поворачивается при атаке. <b>Цепь жизни</b> — урон лечит тебя. <b>Ускорение</b> — атакует сразу.</p>
+        <h3>🖱️ Управление</h3>
+        <p>Щёлкай по картам. Правая кнопка / Esc — отмена выбора цели. Пробел — «Далее». Наведи на карту на столе — увидишь её крупно.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- game over -->
+<div id="gameover" class="overlay hidden">
+  <div class="panel">
+    <h1>🏆 ПОБЕДА!</h1>
+    <p></p>
+    <button id="btn-restart" class="btn primary large">🔄 Играть ещё</button>
+  </div>
+</div>
+
+<script src="lib/three.min.js"></script>
+<script src="js/cards.js"></script>
+<script src="assets/card-art-data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/cardart.js"></script>
+<script src="js/sfx.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
