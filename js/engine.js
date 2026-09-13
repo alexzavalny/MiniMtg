@@ -10,26 +10,6 @@
     'combat_begin', 'combat_attackers', 'combat_blockers', 'combat_damage', 'combat_end',
     'main2', 'end', 'cleanup',
   ];
-  const PHASE_RU = {
-    untap: 'Разворот', upkeep: 'Поддержка', draw: 'Взятие карты', main1: 'Главная фаза 1',
-    combat_begin: 'Начало боя', combat_attackers: 'Объявление атаки', combat_blockers: 'Объявление блока',
-    combat_damage: 'Боевой урон', combat_end: 'Конец боя', main2: 'Главная фаза 2', end: 'Завершение', cleanup: 'Очистка',
-  };
-  const PHASE_HELP_RU = {
-    untap: 'Все ваши повёрнутые карты разворачиваются.',
-    upkeep: 'Короткий шаг перед взятием карты. Можно играть мгновенные заклинания.',
-    draw: 'Активный игрок берёт карту из библиотеки.',
-    main1: 'Можно разыграть землю (одну за ход), существ и волшебства.',
-    combat_begin: 'Бой начинается. Последний шанс сыграть мгновенное заклинание до атаки.',
-    combat_attackers: 'Активный игрок выбирает, какие существа атакуют. Они поворачиваются.',
-    combat_blockers: 'Защищающийся игрок выбирает, какие существа блокируют.',
-    combat_damage: 'Существа наносят повреждения одновременно. Сначала — с первым ударом.',
-    combat_end: 'Бой окончен. Существа возвращаются.',
-    main2: 'Вторая главная фаза. Можно доиграть существ и волшебства.',
-    end: 'Шаг завершения хода. Можно играть мгновенные заклинания.',
-    cleanup: 'Повреждения снимаются, эффекты «до конца хода» заканчиваются, лишние карты сбрасываются до 7.',
-  };
-
   class GameOver extends Error { constructor() { super('game over'); this.gameOver = true; } }
 
   let nextId = 1;
@@ -47,7 +27,7 @@
       this.listeners = {};
       this.players = [0, 1].map((i) => ({
         idx: i,
-        name: i === this.humanIdx ? 'Вы' : 'Компьютер',
+        name: i === this.humanIdx ? { ru: 'Вы', en: 'You' } : { ru: 'Компьютер', en: 'Computer' },
         deck: opts.decks[i],
         life: 20,
         library: [],
@@ -82,9 +62,10 @@
       if (!fns) return;
       for (const fn of fns) await fn(data || {});
     }
-    async log(text, cls) {
-      this.logLines.push(text);
-      await this.emit('log', { text, cls: cls || '' });
+    /** Structured log: key + params are stored so the UI can re-render in another language. */
+    async log(key, params, cls) {
+      this.logLines.push(MTG.t(key, params));
+      await this.emit('log', { key, params: params || {}, cls: cls || '' });
     }
 
     // ---- helpers ---------------------------------------------------------
@@ -92,7 +73,7 @@
       const c = {
         id: nextId++, def, owner, controller: owner, zone: 'library',
         tapped: false, sick: false, damage: 0, buffs: [], attacking: false, blocking: null,
-        blockedBy: [], blocked: false, deathtouched: false,
+        blockedBy: [], blocked: false, deathtouched: false, counters: [], damagedBy: [],
       };
       this.cards[c.id] = c;
       return c;
@@ -107,13 +88,15 @@
       }
     }
     hasKw(card, kw) { return !!(card.def.keywords && card.def.keywords.includes(kw)); }
-    getPower(card) { return card.def.power + card.buffs.reduce((s, b) => s + b.power, 0); }
-    getToughness(card) { return card.def.toughness + card.buffs.reduce((s, b) => s + b.toughness, 0); }
+    getPower(card) { return card.def.power + card.buffs.reduce((s, b) => s + b.power, 0) + card.counters.reduce((s, c) => s + c.power, 0); }
+    getToughness(card) { return card.def.toughness + card.buffs.reduce((s, b) => s + b.toughness, 0) + card.counters.reduce((s, c) => s + c.toughness, 0); }
     isCreature(card) { return card.def.type === 'creature'; }
     creatures(p) { return this.players[p].battlefield.filter((c) => this.isCreature(c)); }
     lands(p) { return this.players[p].battlefield.filter((c) => c.def.type === 'land'); }
+    isProtectedFrom(card, source) { return !!(card && source && card.def.protection && card.def.protection.includes(source.def.color)); }
     canBlock(blocker, attacker) {
       if (blocker.tapped) return false;
+      if (this.isProtectedFrom(attacker, blocker)) return false;
       if (this.hasKw(attacker, 'flying') && !this.hasKw(blocker, 'flying') && !this.hasKw(blocker, 'reach')) return false;
       return true;
     }
@@ -188,7 +171,7 @@
     validTargets(p, spec, source) {
       const out = [];
       const allCreatures = [...this.creatures(0), ...this.creatures(1)];
-      const push = (c) => out.push({ kind: 'card', id: c.id });
+      const push = (c) => { if (!this.isProtectedFrom(c, source)) out.push({ kind: 'card', id: c.id }); };
       switch (spec) {
         case 'any':
           allCreatures.forEach(push);
@@ -197,6 +180,7 @@
         case 'creature': allCreatures.forEach(push); break;
         case 'ownCreature': this.creatures(p).forEach(push); break;
         case 'oppCreature': this.creatures(1 - p).forEach(push); break;
+        case 'nonBlackCreature': allCreatures.filter((c) => c.def.color !== 'B').forEach(push); break;
         case 'player': out.push({ kind: 'player', idx: 0 }, { kind: 'player', idx: 1 }); break;
         case 'combatCreature': allCreatures.filter((c) => c.attacking || c.blocking).forEach(push); break;
         case 'spell':
@@ -212,6 +196,7 @@
       return this.validTargets(p, spec, source).some((v) => v.kind === t.kind && (v.id === t.id) && (v.idx === t.idx));
     }
     targetSpecs(def) { return (def.effect && def.effect.targets) || []; }
+    effectTargetSpecs(effect) { return (effect && effect.targets) || []; }
     hasTargets(p, card) {
       return this.targetSpecs(card.def).every((spec) => this.validTargets(p, spec, card).length > 0);
     }
@@ -252,7 +237,7 @@
       if (!card || !this.canPlayLand(p, card)) return false;
       this.landPlayed = true;
       await this.moveToBattlefield(card, p);
-      await this.log(`${this.players[p].name}: разыграна земля «${card.def.name}».`);
+      await this.log('log.land', { player: this.players[p].name, card: card.def.name });
       return true;
     }
     async castSpell(p, cardId, targets) {
@@ -267,8 +252,8 @@
       card.zone = 'stack';
       const item = { id: nextId++, type: 'spell', card, controller: p, targets };
       this.stack.push(item);
-      const tdesc = targets.length ? ' → ' + targets.map((t) => this.describeTarget(t)).join(', ') : '';
-      await this.log(`${this.players[p].name} разыгрывает «${card.def.name}»${tdesc}.`, 'cast');
+      const names = targets.map((t) => this.describeTarget(t));
+      await this.log(names.length ? 'log.castAt' : 'log.cast', { player: this.players[p].name, card: card.def.name, targets: names }, 'cast');
       await this.emit('cast', { item, player: p, card: card.id, targets });
       return true;
     }
@@ -282,7 +267,7 @@
         const specs = this.targetSpecs(card.def);
         const legal = item.targets.map((t, i) => this.targetLegal(t, specs[i], p, card));
         if (specs.length && !legal.some((x) => x)) {
-          await this.log(`«${card.def.name}» отменяется: цель исчезла.`, 'fizzle');
+          await this.log('log.fizzle', { card: card.def.name }, 'fizzle');
           await this.moveToGraveyard(card);
           await this.emit('fizzle', { card: card.id });
           await this.checkSBA();
@@ -290,19 +275,23 @@
         }
         if (card.def.type === 'creature') {
           await this.moveToBattlefield(card, p);
-          await this.log(`«${card.def.name}» выходит на поле битвы.`);
-          if (card.def.etb) {
-            const trig = { id: nextId++, type: 'trigger', card, controller: p, effect: card.def.etb, targets: [] };
-            this.stack.push(trig);
-            await this.log(`Срабатывает способность «${card.def.name}».`, 'trigger');
-            await this.emit('trigger', { item: trig });
-          }
+          await this.log('log.enters', { card: card.def.name });
+          if (card.def.etb) await this.queueTrigger(card, p, card.def.etb);
         } else {
           await this.applyEffect(card.def.effect, p, item.targets.filter((t, i) => legal[i]), card);
           await this.moveToGraveyard(card);
         }
       } else if (item.type === 'trigger') {
-        await this.applyEffect(item.effect, p, item.targets, item.card);
+        const specs = this.effectTargetSpecs(item.effect);
+        if (specs.length && !item.targets.length) {
+          const response = await this.choose(p, { type: 'triggerTargets', player: p, cardId: item.card.id, specs });
+          item.targets = (response && response.targets) || [];
+        }
+        const legal = item.targets.map((t, i) => this.targetLegal(t, specs[i], p, item.card));
+        if (specs.length && !legal.some((x) => x)) {
+          await this.log('log.fizzle', { card: item.card.def.name }, 'fizzle');
+          await this.emit('fizzle', { card: item.card.id });
+        } else await this.applyEffect(item.effect, p, specs.length ? item.targets.filter((t, i) => legal[i]) : item.targets, item.card);
       }
       await this.emit('resolved', { item });
       await this.checkSBA();
@@ -315,20 +304,20 @@
         case 'pump': {
           const c = this.cardById(targets[0].id);
           c.buffs.push({ power: effect.power, toughness: effect.toughness });
-          await this.log(`«${c.def.name}» получает +${effect.power}/+${effect.toughness}.`);
+          await this.log('log.pump', { card: c.def.name, p: effect.power, t: effect.toughness });
           await this.emit('pump', { card: c.id, power: effect.power, toughness: effect.toughness });
           break;
         }
         case 'destroy': {
           const c = this.cardById(targets[0].id);
-          await this.log(`«${c.def.name}» уничтожено.`, 'death');
+          await this.log('log.destroyed', { card: c.def.name }, 'death');
           await this.emit('destroy', { card: c.id });
           await this.moveToGraveyard(c);
           break;
         }
         case 'bounce': {
           const c = this.cardById(targets[0].id);
-          await this.log(`«${c.def.name}» возвращается в руку.`);
+          await this.log('log.bounce', { card: c.def.name });
           await this.emit('bounce', { card: c.id });
           this.removeFromZone(c);
           this.resetCard(c);
@@ -343,11 +332,45 @@
         case 'gainLife':
           await this.changeLife(p, effect.amount, source);
           break;
+        case 'addMana': {
+          const pl = this.players[p];
+          pl.pool[effect.color] += effect.amount;
+          await this.log('log.addMana', { n: effect.amount, color: effect.manaName || effect.color }, 'mana');
+          await this.emit('pool', { player: p, pool: Object.assign({}, pl.pool) });
+          break;
+        }
+        case 'discardRandom': {
+          const victim = effect.player === 'damagedPlayer' && targets[0] && targets[0].kind === 'player' ? targets[0].idx : this.opp(p);
+          for (let i = 0; i < effect.amount; i++) {
+            const hand = this.players[victim].hand;
+            if (!hand.length) break;
+            const card = hand[Math.floor(this.rng() * hand.length)];
+            await this.log('log.discard', { player: this.players[victim].name, card: card.def.name });
+            await this.emit('discard', { card: card.id });
+            await this.moveToGraveyard(card);
+          }
+          break;
+        }
+        case 'payLifeOrSacrifice':
+          if (this.players[p].life > effect.amount) await this.changeLife(p, -effect.amount, source);
+          else if (source.zone === 'battlefield') {
+            await this.log('log.sacrificed', { card: source.def.name }, 'death');
+            await this.emit('destroy', { card: source.id });
+            await this.moveToGraveyard(source);
+          }
+          break;
+        case 'addCounter':
+          if (source.zone === 'battlefield') {
+            source.counters.push({ power: effect.power, toughness: effect.toughness });
+            await this.log('log.counterAdded', { card: source.def.name, p: effect.power, t: effect.toughness }, 'trigger');
+            await this.emit('pump', { card: source.id, power: effect.power, toughness: effect.toughness });
+          }
+          break;
         case 'counter': {
           const idx = this.stack.findIndex((s) => s.id === targets[0].id);
           if (idx >= 0) {
             const it = this.stack.splice(idx, 1)[0];
-            await this.log(`«${it.card.def.name}» отменено!`, 'counter');
+            await this.log('log.countered', { card: it.card.def.name }, 'counter');
             await this.emit('countered', { item: it });
             await this.moveToGraveyard(it.card);
           }
@@ -367,30 +390,36 @@
     }
 
     // ---- damage / life ---------------------------------------------------
-    async dealDamage(source, target, amount, silent) {
+    async dealDamage(source, target, amount, silent, combat) {
       if (amount <= 0) return;
       if (target.kind === 'player') {
         const pl = this.players[target.idx];
         pl.life -= amount;
-        await this.log(`«${source.def.name}» наносит ${amount} повреждений: ${pl.name}.`, 'damage');
+        await this.log('log.damagePlayer', { source: source.def.name, n: amount, player: pl.name }, 'damage');
         if (!silent) await this.emit('damage', { source: source.id, target, amount });
         await this.emit('life', { player: target.idx, life: pl.life, delta: -amount });
       } else {
         const c = this.cardById(target.id);
         if (!c || c.zone !== 'battlefield') return;
+        if (this.isProtectedFrom(c, source)) return;
         c.damage += amount;
+        if (this.isCreature(source) && !c.damagedBy.includes(source.id)) c.damagedBy.push(source.id);
         if (this.isCreature(source) && this.hasKw(source, 'deathtouch')) c.deathtouched = true;
-        await this.log(`«${source.def.name}» наносит ${amount} повреждений «${c.def.name}».`, 'damage');
+        await this.log('log.damageCard', { source: source.def.name, n: amount, card: c.def.name }, 'damage');
         if (!silent) await this.emit('damage', { source: source.id, target, amount });
       }
       if (this.isCreature(source) && this.hasKw(source, 'lifelink')) {
         await this.changeLife(source.controller, amount, source);
       }
+      if (combat && target.kind === 'player' && this.isCreature(source) && source.def.combatDamagePlayer) {
+        await this.queueTrigger(source, source.controller, source.def.combatDamagePlayer, [target]);
+      }
     }
     async changeLife(p, delta, source) {
       const pl = this.players[p];
       pl.life += delta;
-      if (delta > 0) await this.log(`${pl.name} получает ${delta} жизней.`, 'life');
+      if (delta > 0) await this.log('log.gainLife', { player: pl.name, n: delta }, 'life');
+      if (delta < 0) await this.log('log.loseLife', { player: pl.name, n: -delta }, 'life');
       await this.emit('life', { player: p, life: pl.life, delta });
     }
 
@@ -410,7 +439,7 @@
       if (si >= 0) this.stack.splice(si, 1);
     }
     resetCard(card) {
-      card.tapped = false; card.sick = false; card.damage = 0; card.buffs = [];
+      card.tapped = false; card.sick = false; card.damage = 0; card.buffs = []; card.counters = []; card.damagedBy = [];
       card.attacking = false; card.blocking = null; card.blockedBy = []; card.blocked = false; card.deathtouched = false;
     }
     async moveToBattlefield(card, p) {
@@ -434,6 +463,12 @@
       this.players[card.owner].graveyard.push(card);
       await this.emit('zone', { card: card.id, to: 'graveyard', player: card.owner });
     }
+    async queueTrigger(card, controller, effect, targets) {
+      const trig = { id: nextId++, type: 'trigger', card, controller, effect, targets: targets || [] };
+      this.stack.push(trig);
+      await this.log('log.trigger', { card: card.def.name }, 'trigger');
+      await this.emit('trigger', { item: trig });
+    }
     async drawCards(p, n) {
       for (let i = 0; i < n; i++) await this.drawCard(p);
     }
@@ -442,7 +477,7 @@
       const card = pl.library.pop();
       if (!card) {
         pl.drewFromEmpty = true;
-        await this.log(`${pl.name} не может взять карту: библиотека пуста!`, 'death');
+        await this.log('log.deckOut', { player: pl.name }, 'death');
         return null;
       }
       card.zone = 'hand';
@@ -460,7 +495,13 @@
           for (const c of [...this.creatures(p)]) {
             const t = this.getToughness(c);
             if (t <= 0 || c.damage >= t || (c.deathtouched && c.damage > 0)) {
-              await this.log(`«${c.def.name}» погибает.`, 'death');
+              for (const sourceId of c.damagedBy.slice()) {
+                const source = this.cardById(sourceId);
+                if (source && source.zone === 'battlefield' && source.def.creatureDiesAfterDamage) {
+                  await this.queueTrigger(source, source.controller, source.def.creatureDiesAfterDamage);
+                }
+              }
+              await this.log('log.dies', { card: c.def.name }, 'death');
               await this.emit('dies', { card: c.id });
               await this.moveToGraveyard(c);
               changed = true;
@@ -550,7 +591,7 @@
       for (const pl of this.players) this.shuffle(pl.library);
       this.active = this.rng() < 0.5 ? 0 : 1;
       await this.emit('start', { first: this.active });
-      await this.log(`Первым ходит: ${this.players[this.active].name}.`);
+      await this.log('log.first', { player: this.players[this.active].name });
       for (let i = 0; i < 7; i++) for (const p of [0, 1]) await this.drawCard(p);
       await this.emit('handsDealt', {});
       try {
@@ -568,7 +609,7 @@
       this.attackers = [];
       this.combatHappened = false;
       await this.emit('turnStart', { player: ap, turn: this.turn });
-      await this.log(`— Ход ${this.turn}: ${this.players[ap].name} —`, 'turn');
+      await this.log('log.turn', { n: this.turn, player: this.players[ap].name }, 'turn');
 
       await this.setPhase('untap');
       const toUntap = this.players[ap].battlefield.filter((c) => c.tapped);
@@ -576,6 +617,7 @@
       if (toUntap.length) await this.emit('untap', { cards: toUntap.map((c) => c.id) });
 
       await this.setPhase('upkeep');
+      for (const c of this.players[ap].battlefield.slice()) if (c.def.upkeep) await this.queueTrigger(c, ap, c.def.upkeep);
       await this.priorityRound();
 
       await this.setPhase('draw');
@@ -630,18 +672,18 @@
         this.attackers.push(c.id);
       }
       if (chosen.length) {
-        await this.log(`${this.players[ap].name} атакует: ${chosen.map((c) => '«' + c.def.name + '»').join(', ')}.`, 'attack');
+        await this.log('log.attacks', { player: this.players[ap].name, cards: chosen.map((c) => c.def.name) }, 'attack');
         if (tapped.length) await this.emit('tap', { cards: tapped, mana: false });
         await this.emit('attackers', { player: ap, attackers: this.attackers.slice() });
       } else {
-        await this.log(`${this.players[ap].name} не атакует.`);
+        await this.log('log.noAttack', { player: this.players[ap].name });
       }
     }
     async declareBlockers() {
       const dp = 1 - this.active;
       const cands = this.creatures(dp).filter((c) => !c.tapped);
       const attackers = this.attackers.map((id) => this.cardById(id));
-      if (!cands.length) { await this.log(`${this.players[dp].name} не может блокировать.`); return; }
+      if (!cands.length) { await this.log('log.cantBlock', { player: this.players[dp].name }); return; }
       const resp = await this.choose(dp, {
         type: 'blockers', player: dp, attackers: this.attackers.slice(), candidates: cands.map((c) => c.id),
       });
@@ -654,9 +696,8 @@
         pairs.push({ blocker: b.id, attacker: a.id });
       }
       if (pairs.length) {
-        await this.log(`${this.players[dp].name} блокирует: ` +
-          pairs.map((pr) => `«${this.cardById(pr.blocker).def.name}» → «${this.cardById(pr.attacker).def.name}»`).join(', ') + '.', 'block');
-      } else await this.log(`${this.players[dp].name} не блокирует.`);
+        await this.log('log.blocks', { player: this.players[dp].name, pairs: pairs.map((pr) => [this.cardById(pr.blocker).def.name, this.cardById(pr.attacker).def.name]) }, 'block');
+      } else await this.log('log.noBlock', { player: this.players[dp].name });
       await this.emit('blockers', { player: dp, blocks: pairs });
     }
     combatants() {
@@ -669,7 +710,7 @@
       const all = this.combatants();
       const anyFS = all.some((c) => this.hasKw(c, 'first_strike'));
       if (anyFS) {
-        await this.log('Шаг первого удара.', 'phase');
+        await this.log('log.firstStrike', {}, 'phase');
         await this.dealCombatDamage((c) => this.hasKw(c, 'first_strike'));
         await this.checkSBA();
       }
@@ -710,7 +751,7 @@
       }
       if (!events.length) return;
       // apply simultaneously
-      for (const e of events) await this.dealDamage(e.source, e.target, e.amount, true);
+      for (const e of events) await this.dealDamage(e.source, e.target, e.amount, true, true);
       await this.emit('combatDamage', {
         events: events.map((e) => ({ source: e.source.id, target: e.target, amount: e.amount })),
       });
@@ -732,7 +773,7 @@
         while (ids.length < n) { const c = pl.hand.find((x) => !ids.includes(x.id)); ids.push(c.id); }
         for (const id of ids) {
           const c = this.cardById(id);
-          await this.log(`${pl.name} сбрасывает «${c.def.name}».`);
+          await this.log('log.discard', { player: pl.name, card: c.def.name });
           await this.emit('discard', { card: c.id });
           await this.moveToGraveyard(c);
         }
@@ -748,6 +789,4 @@
 
   MTG.Game = Game;
   MTG.PHASES = PHASES;
-  MTG.PHASE_RU = PHASE_RU;
-  MTG.PHASE_HELP_RU = PHASE_HELP_RU;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -6,7 +6,7 @@
   const HUMAN = 0;
 
   let ui, scene, game, cardArtReady;
-  const input = { mode: 'idle', req: null, spell: null, targets: [], specIdx: 0, selected: [], blocks: {}, blocker: null };
+  const input = { mode: 'idle', req: null, spell: null, targetSpecs: null, targetMode: null, targets: [], specIdx: 0, selected: [], blocks: {}, blocker: null };
 
   function costRu(cost) {
     const p = MTG.parseCost(cost);
@@ -15,21 +15,21 @@
     for (const c of ['W', 'U', 'B', 'R', 'G']) s += sym[c].repeat(p[c]);
     return s || '0';
   }
+  // Returns [i18nKey, params] explaining why a hand card can't be played now.
   function whyCannot(card) {
     const p = HUMAN, d = card.def;
     if (d.type === 'land') {
-      if (game.landPlayed) return 'Землю можно разыграть только одну за ход.';
-      if (!game.sorcerySpeed(p)) return 'Землю можно разыграть только в свою главную фазу, когда стек пуст.';
-      return '';
+      if (game.landPlayed) return ['why.landOnce'];
+      return ['why.landTiming'];
     }
     if (d.type !== 'instant' && !game.sorcerySpeed(p)) {
-      if (game.stack.length) return 'Сначала должен разрешиться стек.';
-      if (game.active !== p) return 'Существ и волшебства можно играть только в свой ход.';
-      return 'Существ и волшебства можно играть только в главную фазу.';
+      if (game.stack.length) return ['why.stack'];
+      if (game.active !== p) return ['why.notYourTurn'];
+      return ['why.notMain'];
     }
-    if (!game.canPay(p, d.cost)) return `Не хватает маны. Нужно: ${costRu(d.cost)}. Разверните/сыграйте земли.`;
-    if (!game.hasTargets(p, card)) return 'Сейчас нет подходящей цели для этого заклинания.';
-    return 'Сейчас нельзя сыграть эту карту.';
+    if (!game.canPay(p, d.cost)) return ['why.mana', { cost: costRu(d.cost) }];
+    if (!game.hasTargets(p, card)) return ['why.noTarget'];
+    return ['why.generic'];
   }
 
   // ------------------------------------------------------------ highlights
@@ -63,51 +63,42 @@
   function enterPriority(req) {
     input.mode = 'priority'; input.req = req;
     const ph = game.phase, mine = game.active === HUMAN;
-    let hint, btn = 'Далее ▶', cls = '';
+    let hint, params = null, btn = 'btn.next', cls = '';
     if (game.stack.length) {
       const top = game.stack[game.stack.length - 1];
-      const who = top.controller === HUMAN ? 'Вы разыграли' : 'Противник разыграл';
-      hint = `${who} «${top.card.def.name}». В ответ можно сыграть <b>мгновенное</b> заклинание. Или нажмите «Пропустить» — заклинание разрешится.`;
-      btn = 'Пропустить ▶';
-    } else if (mine && ph === 'main1') {
-      hint = 'Ваша <b>главная фаза</b>. Сыграйте землю (одну за ход) и существ. Готово? Переходите к бою.';
-      btn = req.castable.length || req.lands.length ? 'К бою ⚔️' : 'К бою ⚔️'; cls = 'primary';
-    } else if (mine && ph === 'main2') {
-      hint = 'Вторая <b>главная фаза</b>. Можно доиграть карты. Затем завершите ход.';
-      btn = 'Завершить ход ⏭'; cls = 'primary';
-    } else if (mine && ph === 'combat_begin') {
-      hint = 'Начало боя. Можно сыграть мгновенное заклинание до объявления атаки.';
-    } else if (mine && ph === 'combat_attackers') {
-      hint = 'Атака объявлена. Можно сыграть мгновенное заклинание до блока.';
-    } else if (ph === 'combat_blockers') {
-      hint = mine ? 'Блоки объявлены. Самое время для <b>Роста великана</b> или <b>Молнии</b>!' : 'Вы объявили блоки. Можно усилить блокирующего мгновенным заклинанием.';
-    } else if (!mine && ph === 'combat_attackers') {
-      hint = 'Противник атакует. Можно сыграть мгновенное заклинание (например, убить атакующего).';
-    } else if (!mine && ph === 'end') {
-      hint = 'Конец хода противника. Хороший момент потратить лишнюю ману на мгновенное заклинание.';
-    } else hint = `Фаза «${MTG.PHASE_RU[ph]}». Можно сыграть мгновенное заклинание или нажать «Далее».`;
-    ui.setHint(hint);
+      hint = 'hint.stack';
+      params = { who: MTG.i18n.strings[top.controller === HUMAN ? 'hint.who.you' : 'hint.who.opp'], card: top.card.def.name };
+      btn = 'btn.pass';
+    } else if (mine && ph === 'main1') { hint = 'hint.main1'; btn = 'btn.toCombat'; cls = 'primary'; }
+    else if (mine && ph === 'main2') { hint = 'hint.main2'; btn = 'btn.endTurn'; cls = 'primary'; }
+    else if (mine && ph === 'combat_begin') hint = 'hint.combat_begin';
+    else if (mine && ph === 'combat_attackers') hint = 'hint.myAttackers';
+    else if (ph === 'combat_blockers') hint = mine ? 'hint.myBlockers' : 'hint.theirBlockers';
+    else if (!mine && ph === 'combat_attackers') hint = 'hint.theirAttackers';
+    else if (!mine && ph === 'end') hint = 'hint.theirEnd';
+    else { hint = 'hint.generic'; params = { phase: MTG.i18n.strings['phase.' + ph] }; }
+    ui.setHint(hint, params);
     ui.setButtons(btn, null, cls);
     ui.onMain = () => submit({ action: 'pass' });
     refreshHighlights();
   }
-  function enterTargeting(card) {
-    input.mode = 'targeting'; input.spell = card; input.targets = []; input.specIdx = 0;
+  function enterTargeting(card, specs, mode) {
+    input.mode = 'targeting'; input.spell = card; input.targetSpecs = specs || game.targetSpecs(card.def); input.targetMode = mode || 'cast'; input.targets = []; input.specIdx = 0;
     nextTargetStep();
   }
   function nextTargetStep() {
-    const specs = game.targetSpecs(input.spell.def);
+    const specs = input.targetSpecs;
     if (input.specIdx >= specs.length) {
       const targets = input.targets;
       input.mode = 'idle';
-      submit({ action: 'cast', cardId: input.spell.id, targets });
+      if (input.targetMode === 'trigger') submit({ targets });
+      else submit({ action: 'cast', cardId: input.spell.id, targets });
       return;
     }
     const spec = specs[input.specIdx];
     input.validNow = game.validTargets(HUMAN, spec, input.spell).filter((t) => !input.targets.some((x) => x.kind === t.kind && x.id === t.id && x.idx === t.idx));
-    const what = { any: 'любую цель: существо или игрока', creature: 'существо', ownCreature: 'своё существо', oppCreature: 'существо противника', player: 'игрока', combatCreature: 'атакующее или блокирующее существо', spell: 'заклинание в стеке' }[spec];
-    ui.setHint(`🎯 Выберите ${what} для «${input.spell.def.name}».`);
-    ui.setButtons(null, 'Отмена ✖');
+    ui.setHint('hint.target', { what: MTG.i18n.strings['target.' + spec], card: input.spell.def.name });
+    ui.setButtons(null, input.targetMode === 'cast' ? 'btn.cancel' : null);
     ui.onCancel = () => { input.mode = 'idle'; enterPriority(input.req); };
     refreshHighlights();
   }
@@ -118,13 +109,13 @@
   }
   function enterAttackers(req) {
     input.mode = 'attackers'; input.req = req; input.selected = [];
-    ui.setHint('⚔️ <b>Объявление атаки.</b> Щёлкните по существам, которые атакуют, затем нажмите «Атаковать».');
+    ui.setHint('hint.attackers');
     updateAttackButtons();
     refreshHighlights();
   }
   function updateAttackButtons() {
     const n = input.selected.length;
-    ui.setButtons(n ? `Атаковать (${n}) ⚔️` : 'Не атаковать ▶', n ? 'Сбросить выбор' : null, n ? 'primary' : '');
+    ui.setButtons(n ? 'btn.attack' : 'btn.noAttack', n ? 'btn.reset' : null, n ? 'primary' : '', { n });
     ui.onMain = () => { const s = input.selected.slice(); input.mode = 'idle'; scene.setSelectedOffsets({}); submit({ attackers: s }); };
     ui.onCancel = () => { input.selected = []; scene.setSelectedOffsets({}); updateAttackButtons(); refreshHighlights(); };
     const offs = {}; for (const id of input.selected) offs[id] = 0.7;
@@ -132,13 +123,13 @@
   }
   function enterBlockers(req) {
     input.mode = 'blockers'; input.req = req; input.blocks = {}; input.blocker = null;
-    ui.setHint('🛡️ <b>Объявление блока.</b> Щёлкните своё существо, затем — атакующего, которого оно блокирует. Повторный щелчок снимает блок.');
+    ui.setHint('hint.blockers');
     updateBlockButtons();
     refreshHighlights();
   }
   function updateBlockButtons() {
     const n = Object.keys(input.blocks).length;
-    ui.setButtons(n ? `Подтвердить блок (${n}) 🛡️` : 'Не блокировать ▶', n ? 'Сбросить' : null, n ? 'primary' : '');
+    ui.setButtons(n ? 'btn.confirmBlock' : 'btn.noBlock', n ? 'btn.reset' : null, n ? 'primary' : '', { n });
     ui.onMain = () => { const b = Object.assign({}, input.blocks); input.mode = 'idle'; scene.clearBlockLines(); submit({ blocks: b }); };
     ui.onCancel = () => { input.blocks = {}; input.blocker = null; scene.clearBlockLines(); updateBlockButtons(); refreshHighlights(); };
     scene.blockLines(Object.entries(input.blocks).map(([b, a]) => ({ blocker: Number(b), attacker: Number(a) })));
@@ -149,8 +140,8 @@
   }
   function updateDiscardButtons() {
     const n = input.req.count;
-    ui.setHint(`🧹 В руке больше 7 карт. Выберите ${n} карт(ы) для сброса (${input.selected.length}/${n}).`);
-    ui.setButtons(input.selected.length === n ? 'Сбросить' : null, null, 'primary');
+    ui.setHint('hint.discard', { n, k: input.selected.length });
+    ui.setButtons(input.selected.length === n ? 'btn.discard' : null, null, 'primary');
     ui.onMain = () => { const s = input.selected.slice(); input.mode = 'idle'; scene.setSelectedOffsets({}); submit({ cards: s }); };
     const offs = {}; for (const id of input.selected) offs[id] = 1;
     scene.setSelectedOffsets(offs);
@@ -160,7 +151,7 @@
     input.mode = 'idle'; input.req = null;
     scene.setHighlights({});
     ui.setPlayerTargetable('opp', false); ui.setPlayerTargetable('me', false);
-    ui.setWaiting('');
+    ui.setWaiting(false);
     game.submit(resp);
   }
 
@@ -180,7 +171,8 @@
             return;
           }
           MTG.Sfx.play('error');
-          ui.setHint(`⛔ ${whyCannot(card)}`, 'warn');
+          const [k, prm] = whyCannot(card);
+          ui.setHint(k, prm, 'warn');
           return;
         }
         if (card.zone === 'battlefield' && card.controller === HUMAN && card.def.type === 'land' && !card.tapped) {
@@ -212,16 +204,16 @@
           return;
         }
         if (req.attackers.includes(id)) {
-          if (!input.blocker) { ui.setHint('Сначала выберите <b>своё</b> существо, которое будет блокировать.', 'warn'); MTG.Sfx.play('error'); return; }
+          if (!input.blocker) { ui.setHint('hint.blockFirst', null, 'warn'); MTG.Sfx.play('error'); return; }
           const b = game.cardById(input.blocker);
           if (!game.canBlock(b, card)) {
-            ui.setHint(`⛔ «${b.def.name}» не может блокировать «${card.def.name}»: у атакующего Полёт, а у блокирующего нет Полёта или Охвата.`, 'warn');
+            ui.setHint('hint.cantBlockFlying', { blocker: b.def.name, attacker: card.def.name }, 'warn');
             MTG.Sfx.play('error'); return;
           }
           input.blocks[input.blocker] = id; input.blocker = null;
           MTG.Sfx.play('block');
           updateBlockButtons(); refreshHighlights();
-          ui.setHint('🛡️ Блок назначен. Можно добавить ещё или подтвердить.');
+          ui.setHint('hint.blockSet');
         }
         break;
       }
@@ -251,18 +243,18 @@
   // ------------------------------------------------------- engine wiring
   function wire() {
     const counts = () => ui.updateCounts(game, HUMAN);
-    game.on('log', (e) => ui.log(e.text, e.cls));
+    game.on('log', (e) => ui.log(e.key, e.params, e.cls));
     game.on('start', async () => { ui.setNames(game, HUMAN); counts(); });
     game.on('draw', async (e) => { await scene.animDraw(e.card, e.player, game.turn === 0); counts(); });
     game.on('handsDealt', async () => { await wait(200); });
     game.on('turnStart', async (e) => {
       ui.setTurnInfo(e.turn);
       MTG.Sfx.play('turn');
-      await ui.banner(e.player === HUMAN ? 'ВАШ ХОД' : 'ХОД ПРОТИВНИКА', e.player === HUMAN ? 'mine' : 'theirs');
+      await ui.banner(e.player === HUMAN ? 'turn.mine' : 'turn.theirs', e.player === HUMAN ? 'mine' : 'theirs');
     });
     game.on('phase', async (e) => {
       ui.setPhase(e.phase, e.active, HUMAN);
-      if (input.mode === 'idle') ui.setWaiting(e.active === HUMAN ? '' : undefined);
+      if (input.mode === 'idle') ui.setWaiting(e.active !== HUMAN);
       await wait(e.phase === 'untap' || e.phase === 'cleanup' ? 150 : 260);
     });
     game.on('untap', async (e) => { await scene.animUntap(e.cards); counts(); });
@@ -294,7 +286,7 @@
       }
     });
     game.on('resolved', async () => { ui.renderStack(game, scene); scene.updateTargetLines(); await scene.layout(true); });
-    game.on('fizzle', async (e) => { scene.floatText(scene.worldPos(e.card), 'ЦЕЛЬ ИСЧЕЗЛА', 'counter'); await wait(500); });
+    game.on('fizzle', async (e) => { scene.floatText(scene.worldPos(e.card), MTG.t('fx.fizzle'), 'counter'); await wait(500); });
     game.on('damage', async (e) => { await scene.animDamageSpell(e.source, e.target, e.amount); await wait(250); });
     game.on('combatDamage', async (e) => { await scene.animCombatDamage(e.events, game); await wait(200); });
     game.on('life', async (e) => { ui.setLife(e.player, e.life, e.delta, HUMAN); await scene.animLife(e.player, e.delta); });
@@ -316,14 +308,16 @@
         case 'attackers': enterAttackers(req); break;
         case 'blockers': enterBlockers(req); break;
         case 'discard': enterDiscard(req); break;
+        case 'triggerTargets': enterTargeting(game.cardById(req.cardId), req.specs, 'trigger'); break;
         default: break;
       }
     });
     game.on('gameOver', async (e) => {
       const win = e.winner === HUMAN;
       MTG.Sfx.play(win ? 'win' : 'lose');
-      document.querySelector('#gameover h1').textContent = win ? '🏆 ПОБЕДА!' : (e.winner === null ? '🤝 НИЧЬЯ' : '💀 ПОРАЖЕНИЕ');
-      document.querySelector('#gameover p').textContent = win ? 'Ты победил компьютер! Отличная игра.' : 'В следующий раз получится! Попробуй ещё.';
+      document.querySelector('#gameover h1').dataset.i18n = win ? 'over.win' : (e.winner === null ? 'over.draw' : 'over.lose');
+      document.querySelector('#gameover p').dataset.i18n = win ? 'over.winText' : 'over.loseText';
+      MTG.i18n.applyDom(document.getElementById('gameover'));
       if (win) for (let i = 0; i < 6; i++) setTimeout(() => scene.burst(new THREE.Vector3((Math.random() - 0.5) * 12, 2, (Math.random() - 0.5) * 8), ['R', 'G', 'W', 'U'][i % 4], { count: 200, speed: 6, size: 0.6, life: 1.5 }), i * 300);
       await wait(1200);
       ui.showOverlay('#gameover');
@@ -340,6 +334,7 @@
     game = new MTG.Game({ decks: [MTG.DECKS[deckId], oppDeck], ai: MTG.AI.decide, humanIdx: HUMAN, fullControl });
     window.game = game;
     scene.setGame(game, HUMAN);
+    ui.bind(game, scene, HUMAN);
     scene.onClick = onCardClick;
     scene.onHover = onHover;
     scene.onBackgroundClick = (button) => { if (button === 2 && input.mode === 'targeting') ui.onCancel(); };
@@ -348,7 +343,7 @@
     ui.updateCounts(game, HUMAN);
     ui.setLife(HUMAN, 20, 0, HUMAN); ui.setLife(1 - HUMAN, 20, 0, HUMAN);
     ui.hideOverlay('#start');
-    game.start().catch((err) => { console.error(err); ui.log('Ошибка: ' + err.message, 'death'); });
+    game.start().catch((err) => { console.error(err); ui.log('log.error', { msg: err.message }, 'death'); });
   }
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -356,17 +351,22 @@
     scene = new MTG.Scene(document.getElementById('c'));
     cardArtReady = MTG.CardArt.preloadArt();
     window.scene = scene;
-    // deck picker
+    // deck picker (rebuilt on language change)
     const picker = document.getElementById('deck-picker');
     let chosen = 'red';
-    for (const d of Object.values(MTG.DECKS)) {
-      const el = document.createElement('div');
-      el.className = 'deck ' + d.color + (d.id === chosen ? ' sel' : '');
-      el.dataset.id = d.id;
-      el.innerHTML = `<img class="deck-cover" src="assets/deck-covers/${d.id}.png" alt=""><div class="nm">${d.name}</div><div class="ds">${d.desc}</div>`;
-      el.addEventListener('click', () => { chosen = d.id; picker.querySelectorAll('.deck').forEach((x) => x.classList.toggle('sel', x === el)); MTG.Sfx.unlock(); MTG.Sfx.play('click'); });
-      picker.appendChild(el);
-    }
+    const buildPicker = () => {
+      picker.innerHTML = '';
+      for (const d of Object.values(MTG.DECKS)) {
+        const el = document.createElement('div');
+        el.className = 'deck ' + d.color + (d.id === chosen ? ' sel' : '');
+        el.dataset.id = d.id;
+        el.innerHTML = `<img class="deck-cover" src="assets/deck-covers/${d.id}.png" alt=""><div class="nm">${MTG.txt(d.name)}</div><div class="ds">${MTG.txt(d.desc)}</div>`;
+        el.addEventListener('click', () => { chosen = d.id; picker.querySelectorAll('.deck').forEach((x) => x.classList.toggle('sel', x === el)); MTG.Sfx.unlock(); MTG.Sfx.play('click'); });
+        picker.appendChild(el);
+      }
+    };
+    buildPicker();
+    ui.onLanguage = () => buildPicker();
     document.getElementById('btn-start').addEventListener('click', () => {
       MTG.Sfx.unlock();
       const full = document.getElementById('opt-full').checked;

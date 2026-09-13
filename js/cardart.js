@@ -1,8 +1,8 @@
-/* Procedural card rendering on <canvas>. Cards: 512x716. */
+/* Procedural card rendering on <canvas>. Cards: 512x768 with a 452px square art window. */
 (function (root) {
   'use strict';
   const MTG = root.MTG || (root.MTG = {});
-  const W = 512, H = 716;
+  const W = 512, H = 768;
 
   const PALETTE = {
     R: { a: '#5a140c', b: '#e8602f', frame: '#b8371f', frame2: '#f08a5a', box: '#f6e2d3', ink: '#2b0f08', glow: '#ff7a3c' },
@@ -25,7 +25,7 @@
     const data = MTG.ART_DATA || {};
     const viaFile = location.protocol === 'file:';
     return Promise.all(defs.map((def) => new Promise((resolve) => {
-      const src = data[def.id] || (viaFile ? null : ART_PATH + def.id + '.png');
+      const src = data[def.id] || (viaFile ? null : ART_PATH + def.id + '.jpg');
       if (!src) return resolve();
       const image = new Image();
       image.onload = () => { artImages[def.id] = image; resolve(); };
@@ -84,7 +84,7 @@
     if (art) {
       ctx.save();
       rr(ctx, x, y, w, h, 14); ctx.clip();
-      const scale = Math.max(w / art.width, h / art.height);
+      const scale = Math.min(w / art.width, h / art.height);
       const drawW = art.width * scale, drawH = art.height * scale;
       ctx.drawImage(art, x + (w - drawW) / 2, y + (h - drawH) / 2, drawW, drawH);
       const shade = ctx.createLinearGradient(x, y, x, y + h);
@@ -134,17 +134,18 @@
     ctx.strokeStyle = 'rgba(0,0,0,0.55)'; ctx.lineWidth = 3; rr(ctx, x, y, w, h, 14); ctx.stroke();
   }
 
+  const txt = (v) => MTG.txt(v);
   function typeLine(def) {
-    let t = MTG.TYPE_NAMES_RU[def.type] || def.type;
-    if (def.subtype && def.type !== 'land') t += ' — ' + def.subtype;
-    if (def.type === 'land') t = 'Базовая земля — ' + def.subtype;
+    if (def.type === 'land') return MTG.t('card.basicLand') + ' — ' + txt(def.subtype);
+    let t = MTG.t('type.' + def.type);
+    if (def.subtype) t += ' — ' + txt(def.subtype);
     return t;
   }
 
   function rulesText(def) {
     const parts = [];
-    if (def.keywords && def.keywords.length) parts.push(def.keywords.map((k) => MTG.KEYWORDS_RU[k]).join(', '));
-    if (def.text) parts.push(def.text);
+    if (def.keywords && def.keywords.length) parts.push(def.keywords.map((k) => MTG.t('kw.' + k)).join(', '));
+    if (def.text) parts.push(txt(def.text));
     return parts;
   }
 
@@ -178,11 +179,12 @@
     ctx.restore();
     const costLeft = isLand ? W - 40 : drawManaCost(ctx, def.cost, W - 34, 54);
     ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    fitText(ctx, def.name, costLeft - 44 - 8, 32, 'bold');
-    ctx.fillText(def.name, 42, 55);
+    const name = txt(def.name);
+    fitText(ctx, name, costLeft - 44 - 8, 32, 'bold');
+    ctx.fillText(name, 42, 55);
 
     // art
-    const artTop = 94, artH = isLand ? 440 : 306;
+    const artTop = 94, artH = W - 60;
     drawArt(ctx, def, 30, artTop, W - 60, artH, pal);
 
     // type line
@@ -212,7 +214,7 @@
     });
     if (def.flavor && yy < tb + tbH - 60) {
       ctx.font = `italic 20px ${FONT}`; ctx.fillStyle = pal.ink + 'aa';
-      for (const line of wrap(ctx, def.flavor, maxW)) { ctx.fillText(line, 42, yy); yy += 25; }
+      for (const line of wrap(ctx, txt(def.flavor), maxW)) { ctx.fillText(line, 42, yy); yy += 25; }
     }
     if (isLand) {
       // big mana symbol
@@ -283,7 +285,7 @@
     ctx.fillText('✦', cx, cy + 4);
     ctx.restore();
     ctx.fillStyle = 'rgba(255,215,120,0.8)'; ctx.font = `bold 34px ${FONT}`; ctx.textAlign = 'center';
-    ctx.fillText('МАГИЯ', cx, H - 80);
+    ctx.fillText(MTG.t('card.back'), cx, H - 80);
     return canvas;
   }
 
@@ -292,14 +294,7 @@
     canvas = canvas || document.createElement('canvas');
     canvas.width = TW; canvas.height = TH;
     const ctx = canvas.getContext('2d');
-    const g = ctx.createRadialGradient(TW / 2, TH / 2, 100, TW / 2, TH / 2, TW * 0.7);
-    g.addColorStop(0, '#173a3a'); g.addColorStop(0.7, '#0e2426'); g.addColorStop(1, '#06100f');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, TW, TH);
-    const rnd = seeded(1234);
-    ctx.fillStyle = 'rgba(255,255,255,0.03)';
-    for (let i = 0; i < 12000; i++) ctx.fillRect(rnd() * TW, rnd() * TH, 2, 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.05)';
-    for (let i = 0; i < 12000; i++) ctx.fillRect(rnd() * TW, rnd() * TH, 2, 2);
+    // This canvas is a transparent gameplay guide over the illustrated table surface.
     // center line
     const cl = ctx.createLinearGradient(0, TH / 2, TW, TH / 2);
     cl.addColorStop(0, 'rgba(120,220,255,0)'); cl.addColorStop(0.5, 'rgba(120,220,255,0.5)'); cl.addColorStop(1, 'rgba(120,220,255,0)');
@@ -313,10 +308,10 @@
       ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.font = `bold 44px ${FONT}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       ctx.fillText(label, TW / 2 - 6.9 * sx + 30, y - 1.25 * sz + 40);
     };
-    zone(4.2, 'ВАШИ ЗЕМЛИ');
-    zone(1.6, 'ВАШИ СУЩЕСТВА');
-    zone(-1.9, 'СУЩЕСТВА ПРОТИВНИКА', true);
-    zone(-4.5, 'ЗЕМЛИ ПРОТИВНИКА', true);
+    zone(4.2, MTG.t('table.myLands'));
+    zone(1.6, MTG.t('table.myCreatures'));
+    zone(-1.9, MTG.t('table.oppCreatures'), true);
+    zone(-4.5, MTG.t('table.oppLands'), true);
     const slot = (xc, zc, label) => {
       const x = TW / 2 + xc * sx, y = TH / 2 + zc * sz;
       ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 3; ctx.setLineDash([10, 10]);
@@ -324,8 +319,9 @@
       ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.font = `bold 30px ${FONT}`; ctx.textAlign = 'center';
       ctx.fillText(label, x, y);
     };
-    slot(9.3, 4.2, 'БИБЛИОТЕКА'); slot(9.3, 1.6, 'КЛАДБИЩЕ');
-    slot(9.3, -4.5, 'БИБЛИОТЕКА'); slot(9.3, -1.9, 'КЛАДБИЩЕ');
+    const lib = MTG.t('table.library'), gy = MTG.t('table.graveyard');
+    slot(9.3, 4.2, lib); slot(9.3, 1.6, gy);
+    slot(9.3, -4.5, lib); slot(9.3, -1.9, gy);
     return canvas;
   }
 

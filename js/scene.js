@@ -140,7 +140,8 @@
   }
 
   // ------------------------------------------------------------------ scene
-  const CARD_W = 1, CARD_H = 1.4;
+  const CARD_W = 1, CARD_H = 1.5;
+  const CARD_RATIO = CARD_H / CARD_W;
   const WORLD_SCALE = 1.7;
   const ROW = { myCreatures: 1.6, myLands: 4.2, oppCreatures: -1.9, oppLands: -4.5 };
   const LIB = { my: [9.3, 4.2], myGy: [9.3, 1.6], opp: [9.3, -4.5], oppGy: [9.3, -1.9] };
@@ -197,16 +198,23 @@
       const rim2 = new THREE.PointLight(0xff8a4a, 0.5, 40); rim2.position.set(8, 6, 6); this.scene.add(rim2);
       this.flash = new THREE.PointLight(0xffffff, 0, 30); this.flash.position.set(0, 4, 0); this.scene.add(this.flash);
 
-      // table
-      const tableTex = new THREE.CanvasTexture(MTG.CardArt.renderTable());
+      // Illustrated tabletop with a separately rendered, localizable gameplay guide.
+      const tableTex = new THREE.TextureLoader().load('assets/table/arcane-table-surface.png');
       tableTex.encoding = THREE.sRGBEncoding; tableTex.anisotropy = 8;
-      const table = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), new THREE.MeshStandardMaterial({ map: tableTex, roughness: 0.9, metalness: 0.05 }));
+      const table = new THREE.Mesh(new THREE.PlaneGeometry(36, 26), new THREE.MeshStandardMaterial({ map: tableTex, roughness: 0.96, metalness: 0.03 }));
       table.rotation.x = -Math.PI / 2; this.scene.add(table);
+      this.table = table;
+      const guideTex = new THREE.CanvasTexture(MTG.CardArt.renderTable());
+      guideTex.encoding = THREE.sRGBEncoding; guideTex.anisotropy = 8;
+      const tableGuide = new THREE.Mesh(new THREE.PlaneGeometry(26, 18), new THREE.MeshBasicMaterial({ map: guideTex, transparent: true, depthWrite: false }));
+      tableGuide.rotation.x = -Math.PI / 2; tableGuide.position.y = 0.01; this.scene.add(tableGuide);
+      this.tableGuide = tableGuide;
+      MTG.i18n.onChange(() => this.relocalize());
       // dark surround
       const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ color: 0x03050a }));
       floor.rotation.x = -Math.PI / 2; floor.position.y = -0.05; this.scene.add(floor);
       // table edge glow
-      const edge = new THREE.Mesh(new THREE.PlaneGeometry(26.6, 18.6), new THREE.MeshBasicMaterial({ color: 0x1f5a66, transparent: true, opacity: 0.5 }));
+      const edge = new THREE.Mesh(new THREE.PlaneGeometry(36.6, 26.6), new THREE.MeshBasicMaterial({ color: 0x1f5a66, transparent: true, opacity: 0.5 }));
       edge.rotation.x = -Math.PI / 2; edge.position.y = -0.02; this.scene.add(edge);
       // stars
       const starGeo = new THREE.BufferGeometry();
@@ -284,7 +292,7 @@
     // ------------------------------------------------------------- textures
     textureFor(card) {
       const g = this.game;
-      let key = card.def.id;
+      let key = MTG.i18n.lang + ':' + card.def.id;
       let state = null;
       if (card.def.type === 'creature' && card.zone === 'battlefield') {
         const p = g.getPower(card), t = g.getToughness(card);
@@ -302,6 +310,16 @@
         this.texCache[key] = tex;
       }
       return tex;
+    }
+    /** Language changed: re-render table labels, card back and every card face. */
+    relocalize() {
+      const tex = new THREE.CanvasTexture(MTG.CardArt.renderTable());
+      tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 8;
+      this.tableGuide.material.map.dispose(); this.tableGuide.material.map = tex; this.tableGuide.material.needsUpdate = true;
+      const back = new THREE.CanvasTexture(MTG.CardArt.renderBack());
+      back.encoding = THREE.sRGBEncoding; back.anisotropy = 8;
+      this.backTex.image = back.image; this.backTex.needsUpdate = true;
+      for (const id of Object.keys(this.views)) this.refreshCard(Number(id));
     }
     cardImageURL(card) {
       const tex = this.textureFor(card);
@@ -402,7 +420,7 @@
       const g = this.game, w = this.width, h = this.height;
       const hand = g.players[this.human].hand;
       const n = hand.length;
-      const cardH = Math.min(h * 0.31, w * 0.17 * 1.4), cardW = cardH / 1.4;
+      const cardH = Math.min(h * 0.31, w * 0.17 * CARD_RATIO), cardW = cardH / CARD_RATIO;
       const maxTotal = Math.min(w * 0.64, n * cardW * 0.95);
       const step = n > 1 ? Math.min(cardW * 0.95, (maxTotal - cardW) / (n - 1)) : 0;
       const total = step * (n - 1) + cardW;
@@ -411,12 +429,12 @@
       hand.forEach((c, i) => {
         const t = n > 1 ? (i - (n - 1) / 2) / ((n - 1) / 2) : 0;
         const lift = this.selectedOffsets[c.id] ? 60 : 0;
-        out[c.id] = { x: -total / 2 + cardW / 2 + i * step, y: baseY - Math.abs(t) * cardH * 0.06 + lift, rot: -t * 0.10, scale: cardH / 1.4, z: i };
+        out[c.id] = { x: -total / 2 + cardW / 2 + i * step, y: baseY - Math.abs(t) * cardH * 0.06 + lift, rot: -t * 0.10, scale: cardH / CARD_H, z: i };
       });
       if (this.hover && out[this.hover]) {
-        const o = out[this.hover]; const bigH = Math.min(h * 0.62, w * 0.36 * 1.4);
-        o.scale = bigH / 1.4; o.y = -h / 2 + bigH / 2 + 8; o.rot = 0; o.z = 200;
-        o.x = Math.max(-w / 2 + bigH / 1.4 / 2 + 10, Math.min(w / 2 - bigH / 1.4 / 2 - 10, o.x));
+        const o = out[this.hover]; const bigH = Math.min(h * 0.62, w * 0.36 * CARD_RATIO);
+        o.scale = bigH / CARD_H; o.y = -h / 2 + bigH / 2 + 8; o.rot = 0; o.z = 200;
+        o.x = Math.max(-w / 2 + bigH / CARD_RATIO / 2 + 10, Math.min(w / 2 - bigH / CARD_RATIO / 2 - 10, o.x));
       }
       return out;
     }
@@ -424,12 +442,12 @@
       const g = this.game, w = this.width, h = this.height;
       const hand = g.players[1 - this.human].hand;
       const n = hand.length;
-      const cardH = h * 0.10, cardW = cardH / 1.4;
+      const cardH = h * 0.10, cardW = cardH / CARD_RATIO;
       const step = Math.min(cardW * 0.45, (w * 0.22) / Math.max(1, n));
       const total = step * (n - 1) + cardW;
       const out = {};
       hand.forEach((c, i) => {
-        out[c.id] = { x: -total / 2 + cardW / 2 + i * step, y: h / 2 - 50 - cardH * 0.12, rot: (i - (n - 1) / 2) * 0.05, scale: cardH / 1.4, z: i, back: true };
+        out[c.id] = { x: -total / 2 + cardW / 2 + i * step, y: h / 2 - 50 - cardH * 0.12, rot: (i - (n - 1) / 2) * 0.05, scale: cardH / CARD_H, z: i, back: true };
       });
       return out;
     }
@@ -711,7 +729,7 @@
       this.particles.spawn(p, { count: 150, colors: FX_COLORS.U, speed: 5, life: 1, size: 0.4, gravity: -2 });
       this.flashLight(p, 0x6cc6ff, 5);
       MTG.Sfx && MTG.Sfx.play('counter');
-      this.floatText(p, 'ОТМЕНЕНО', 'counter');
+      this.floatText(p, MTG.t('fx.countered'), 'counter');
       await tween(v.group.scale, { x: 0.01, y: 0.01 }, 350, 'inQuad');
       this.updateTargetLines();
     }
@@ -808,7 +826,7 @@
       let bandTop = -Infinity;
       for (let i = hand.length - 1; i >= 0; i--) {
         const t = hl[hand[i].id]; if (!t) continue;
-        const w = t.scale, h = t.scale * 1.4;
+        const w = t.scale, h = t.scale * CARD_RATIO;
         bandTop = Math.max(bandTop, t.y + h / 2);
         if (Math.abs(x - t.x) <= w / 2 && Math.abs(y - t.y) <= h / 2) return hand[i].id;
       }
@@ -816,7 +834,7 @@
       if (saved && hl[saved]) {
         const v = this.views[saved];
         if (v && v.layer === 'hud' && y > bandTop) {
-          const w = v.group.scale.x, h = v.group.scale.y * 1.4;
+          const w = v.group.scale.x, h = v.group.scale.y * CARD_RATIO;
           if (Math.abs(x - v.group.position.x) <= w / 2 && Math.abs(y - v.group.position.y) <= h / 2) return saved;
         }
       }

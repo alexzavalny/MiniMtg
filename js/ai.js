@@ -81,6 +81,8 @@
     const myTurn = g.active === p;
     const burns = byKind('damage').filter((c) => c.def.effect.targets[0] === 'any');
     const faceBurn = byKind('damage');
+    const removals = byKind('destroy');
+    const rituals = byKind('addMana');
     const bestKillable = (amount, minValue) => {
       const cands = oppCreatures.filter((c) => g.getToughness(c) - c.damage <= amount);
       cands.sort((a, b) => value(g, b) - value(g, a));
@@ -100,6 +102,12 @@
 
     if (myTurn && (ph === 'main1' || ph === 'main2')) {
       if (req.lands.length) return { action: 'land', cardId: req.lands[0] };
+      for (const removal of removals) {
+        const spec = removal.def.effect.targets[0];
+        const targets = g.validTargets(p, spec, removal).filter((t) => t.kind === 'card').map((t) => g.cardById(t.id)).filter((c) => c.controller === 1 - p);
+        targets.sort((a, b) => value(g, b) - value(g, a));
+        if (targets.length && value(g, targets[0]) >= (me.life <= 10 ? 2 : 4)) return cast(removal, [T.card(targets[0])]);
+      }
       // removal on threats
       for (const b of burns.sort((a, c) => c.def.effect.amount - a.def.effect.amount)) {
         const t = bestKillable(b.def.effect.amount, me.life <= 10 ? 2 : 3.5);
@@ -115,6 +123,7 @@
       if (draws.length && me.hand.length < 6) return cast(draws[0]);
       // creatures: haste in main1, everything in main2 (or main1 if it's the biggest we can do)
       const creatures = castable.filter((c) => c.def.type === 'creature').sort((a, b) => MTG.cmc(b.def) - MTG.cmc(a.def));
+      if (rituals.length && me.hand.some((c) => c !== rituals[0] && c.def.color === 'B' && c.def.type !== 'land' && !g.canPay(p, c.def.cost))) return cast(rituals[0]);
       if (creatures.length) {
         if (ph === 'main2') return cast(creatures[0]);
         const haste = creatures.find((c) => g.hasKw(c, 'haste'));
@@ -316,12 +325,26 @@
     return { cards: hand.slice(0, req.count).map((c) => c.id) };
   }
 
+  function decideTriggerTargets(g, p, req) {
+    const source = g.cardById(req.cardId);
+    const targets = [];
+    for (const spec of req.specs) {
+      const valid = g.validTargets(p, spec, source).filter((t) => !targets.some((x) => x.kind === t.kind && x.id === t.id && x.idx === t.idx));
+      const cards = valid.filter((t) => t.kind === 'card').map((t) => g.cardById(t.id));
+      cards.sort((a, b) => value(g, b) - value(g, a));
+      if (cards.length) targets.push(T.card(cards[0]));
+      else if (valid.length) targets.push(valid[0]);
+    }
+    return { targets };
+  }
+
   function decide(game, p, req) {
     switch (req.type) {
       case 'priority': return decidePriority(game, p, req);
       case 'attackers': return decideAttackers(game, p, req);
       case 'blockers': return decideBlockers(game, p, req);
       case 'discard': return decideDiscard(game, p, req);
+      case 'triggerTargets': return decideTriggerTargets(game, p, req);
       default: return { action: 'pass' };
     }
   }
