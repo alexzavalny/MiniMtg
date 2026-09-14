@@ -83,6 +83,10 @@
     const faceBurn = byKind('damage');
     const removals = byKind('destroy');
     const rituals = byKind('addMana');
+    const taps = byKind('tap');
+    const lifeGains = byKind('gainLife');
+    const fogs = byKind('preventCombatDamage');
+    const flashCreatures = castable.filter((c) => c.def.type === 'creature' && g.hasKw(c, 'flash')).sort((a, b) => MTG.cmc(b.def) - MTG.cmc(a.def));
     const bestKillable = (amount, minValue) => {
       const cands = oppCreatures.filter((c) => g.getToughness(c) - c.damage <= amount);
       cands.sort((a, b) => value(g, b) - value(g, a));
@@ -121,6 +125,11 @@
       }
       const draws = byKind('draw');
       if (draws.length && me.hand.length < 6) return cast(draws[0]);
+      if (lifeGains.length && me.life <= 11) return cast(lifeGains[0]);
+      if (taps.length && oppCreatures.length) {
+        const target = oppCreatures.slice().sort((a, b) => value(g, b) - value(g, a))[0];
+        if (target && value(g, target) >= 3) return cast(taps[0], [T.card(target)]);
+      }
       // creatures: haste in main1, everything in main2 (or main1 if it's the biggest we can do)
       const creatures = castable.filter((c) => c.def.type === 'creature').sort((a, b) => MTG.cmc(b.def) - MTG.cmc(a.def));
       if (rituals.length && me.hand.some((c) => c !== rituals[0] && c.def.color === 'B' && c.def.type !== 'land' && !g.canPay(p, c.def.cost))) return cast(rituals[0]);
@@ -173,6 +182,10 @@
     // defending: opponent's combat
     if (!myTurn && (ph === 'combat_attackers' || ph === 'combat_blockers')) {
       const attackers = g.attackers.map((id) => g.cardById(id)).filter((a) => a.zone === 'battlefield');
+      if (ph === 'combat_attackers' && flashCreatures.length && attackers.length) {
+        const flash = flashCreatures.find((c) => attackers.some((a) => g.canBlock(c, a)));
+        if (flash && (attackers.reduce((s, a) => s + g.getPower(a), 0) >= 4 || me.life <= 12)) return cast(flash);
+      }
       const smite = byKind('destroy')[0];
       if (smite && attackers.length) {
         const best = attackers.slice().sort((a, b) => value(g, b) - value(g, a))[0];
@@ -195,6 +208,7 @@
         // incoming lethal? burn or bounce unblocked attackers
         const unblocked = attackers.filter((a) => !a.blocked);
         const incoming = unblocked.reduce((s, a) => s + g.getPower(a), 0);
+        if (fogs.length && (incoming >= me.life || incoming >= 5)) return cast(fogs[0]);
         if (incoming >= me.life || incoming >= 6) {
           const big = unblocked.slice().sort((a, b) => g.getPower(b) - g.getPower(a))[0];
           if (big) {
@@ -216,6 +230,7 @@
 
     // opponent's end step: use spare mana on burn
     if (!myTurn && ph === 'end') {
+      if (lifeGains.length && me.life <= 8) return cast(lifeGains[0]);
       for (const b of burns.sort((a, c) => c.def.effect.amount - a.def.effect.amount)) {
         const t = bestKillable(b.def.effect.amount, 3);
         if (t) return cast(b, [T.card(t)]);
@@ -331,7 +346,10 @@
     for (const spec of req.specs) {
       const valid = g.validTargets(p, spec, source).filter((t) => !targets.some((x) => x.kind === t.kind && x.id === t.id && x.idx === t.idx));
       const cards = valid.filter((t) => t.kind === 'card').map((t) => g.cardById(t.id));
-      cards.sort((a, b) => value(g, b) - value(g, a));
+      cards.sort((a, b) => {
+        if (req.effect && req.effect.kind === 'tap' && a.controller !== b.controller) return a.controller === p ? 1 : -1;
+        return value(g, b) - value(g, a);
+      });
       if (cards.length) targets.push(T.card(cards[0]));
       else if (valid.length) targets.push(valid[0]);
     }

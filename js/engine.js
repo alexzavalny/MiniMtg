@@ -72,7 +72,7 @@
     createCard(def, owner) {
       const c = {
         id: nextId++, def, owner, controller: owner, zone: 'library',
-        tapped: false, sick: false, damage: 0, buffs: [], attacking: false, blocking: null,
+        tapped: false, sick: false, skipUntap: 0, damage: 0, buffs: [], attacking: false, blocking: null,
         blockedBy: [], blocked: false, deathtouched: false, counters: [], damagedBy: [],
       };
       this.cards[c.id] = c;
@@ -171,7 +171,9 @@
     validTargets(p, spec, source) {
       const out = [];
       const allCreatures = [...this.creatures(0), ...this.creatures(1)];
-      const push = (c) => { if (!this.isProtectedFrom(c, source)) out.push({ kind: 'card', id: c.id }); };
+      const push = (c) => {
+        if (!this.isProtectedFrom(c, source) && (c.controller === p || !this.hasKw(c, 'hexproof'))) out.push({ kind: 'card', id: c.id });
+      };
       switch (spec) {
         case 'any':
           allCreatures.forEach(push);
@@ -218,7 +220,7 @@
       if (card.zone !== 'hand' || card.controller !== p) return false;
       const t = card.def.type;
       if (t === 'land') return false;
-      if (t !== 'instant' && !this.sorcerySpeed(p)) return false;
+      if (t !== 'instant' && !this.hasKw(card, 'flash') && !this.sorcerySpeed(p)) return false;
       if (!this.canPay(p, card.def.cost)) return false;
       if (!this.hasTargets(p, card)) return false;
       return true;
@@ -284,7 +286,7 @@
       } else if (item.type === 'trigger') {
         const specs = this.effectTargetSpecs(item.effect);
         if (specs.length && !item.targets.length) {
-          const response = await this.choose(p, { type: 'triggerTargets', player: p, cardId: item.card.id, specs });
+          const response = await this.choose(p, { type: 'triggerTargets', player: p, cardId: item.card.id, specs, effect: item.effect });
           item.targets = (response && response.targets) || [];
         }
         const legal = item.targets.map((t, i) => this.targetLegal(t, specs[i], p, item.card));
@@ -331,6 +333,18 @@
           break;
         case 'gainLife':
           await this.changeLife(p, effect.amount, source);
+          break;
+        case 'tap': {
+          const c = this.cardById(targets[0].id);
+          c.tapped = true;
+          c.skipUntap = Math.max(c.skipUntap || 0, effect.skipUntap || 0);
+          await this.log('log.tapped', { card: c.def.name }, 'control');
+          await this.emit('tap', { cards: [c.id], mana: false });
+          break;
+        }
+        case 'preventCombatDamage':
+          this.combatDamagePrevented = true;
+          await this.log('log.combatDamagePrevented', {}, 'control');
           break;
         case 'addMana': {
           const pl = this.players[p];
@@ -439,7 +453,7 @@
       if (si >= 0) this.stack.splice(si, 1);
     }
     resetCard(card) {
-      card.tapped = false; card.sick = false; card.damage = 0; card.buffs = []; card.counters = []; card.damagedBy = [];
+      card.tapped = false; card.sick = false; card.skipUntap = 0; card.damage = 0; card.buffs = []; card.counters = []; card.damagedBy = [];
       card.attacking = false; card.blocking = null; card.blockedBy = []; card.blocked = false; card.deathtouched = false;
     }
     async moveToBattlefield(card, p) {
@@ -538,7 +552,7 @@
       return true;
     }
     hasCastableInstant(p) {
-      return this.players[p].hand.some((c) => c.def.type === 'instant' && this.canCast(p, c));
+      return this.players[p].hand.some((c) => (c.def.type === 'instant' || this.hasKw(c, 'flash')) && this.canCast(p, c));
     }
     shouldAutoPass(p, req) {
       if (!this.isHuman(p)) return false;
@@ -612,8 +626,12 @@
       await this.log('log.turn', { n: this.turn, player: this.players[ap].name }, 'turn');
 
       await this.setPhase('untap');
-      const toUntap = this.players[ap].battlefield.filter((c) => c.tapped);
-      for (const c of this.players[ap].battlefield) { c.tapped = false; c.sick = false; }
+      const toUntap = this.players[ap].battlefield.filter((c) => c.tapped && !c.skipUntap);
+      for (const c of this.players[ap].battlefield) {
+        if (c.skipUntap) c.skipUntap--;
+        else c.tapped = false;
+        c.sick = false;
+      }
       if (toUntap.length) await this.emit('untap', { cards: toUntap.map((c) => c.id) });
 
       await this.setPhase('upkeep');
@@ -707,6 +725,7 @@
       return out;
     }
     async combatDamage() {
+      if (this.combatDamagePrevented) return;
       const all = this.combatants();
       const anyFS = all.some((c) => this.hasKw(c, 'first_strike'));
       if (anyFS) {
@@ -783,6 +802,7 @@
         if (c.damage || c.buffs.length || c.deathtouched) changed = true;
         c.damage = 0; c.buffs = []; c.deathtouched = false;
       }
+      this.combatDamagePrevented = false;
       if (changed) await this.emit('cleanupEffects', {});
     }
   }

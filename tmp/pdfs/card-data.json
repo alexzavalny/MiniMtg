@@ -1,0 +1,1549 @@
+{
+  "cards": {
+    "mountain": {
+      "id": "mountain",
+      "name": {
+        "ru": "Гора",
+        "en": "Mountain"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Гора",
+        "en": "Mountain"
+      },
+      "color": "R",
+      "produces": "R",
+      "emoji": "⛰️",
+      "text": {
+        "ru": "Поверните: добавьте одну красную ману.",
+        "en": "Tap: add one red mana."
+      },
+      "art": "tmp/pdfs/card-art/mountain.jpg"
+    },
+    "forest": {
+      "id": "forest",
+      "name": {
+        "ru": "Лес",
+        "en": "Forest"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Лес",
+        "en": "Forest"
+      },
+      "color": "G",
+      "produces": "G",
+      "emoji": "🌲",
+      "text": {
+        "ru": "Поверните: добавьте одну зелёную ману.",
+        "en": "Tap: add one green mana."
+      },
+      "art": "tmp/pdfs/card-art/forest.jpg"
+    },
+    "plains": {
+      "id": "plains",
+      "name": {
+        "ru": "Равнина",
+        "en": "Plains"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Равнина",
+        "en": "Plains"
+      },
+      "color": "W",
+      "produces": "W",
+      "emoji": "🌾",
+      "text": {
+        "ru": "Поверните: добавьте одну белую ману.",
+        "en": "Tap: add one white mana."
+      },
+      "art": "tmp/pdfs/card-art/plains.jpg"
+    },
+    "island": {
+      "id": "island",
+      "name": {
+        "ru": "Остров",
+        "en": "Island"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Остров",
+        "en": "Island"
+      },
+      "color": "U",
+      "produces": "U",
+      "emoji": "🏝️",
+      "text": {
+        "ru": "Поверните: добавьте одну синюю ману.",
+        "en": "Tap: add one blue mana."
+      },
+      "art": "tmp/pdfs/card-art/island.jpg"
+    },
+    "swamp": {
+      "id": "swamp",
+      "name": {
+        "ru": "Болото",
+        "en": "Swamp"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Болото",
+        "en": "Swamp"
+      },
+      "color": "B",
+      "produces": "B",
+      "emoji": "💀",
+      "text": {
+        "ru": "Поверните: добавьте одну чёрную ману.",
+        "en": "Tap: add one black mana."
+      },
+      "art": "tmp/pdfs/card-art/swamp.jpg"
+    },
+    "goblin_scout": {
+      "id": "goblin_scout",
+      "name": {
+        "ru": "Гоблин-разведчик",
+        "en": "Goblin Scout"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Гоблин",
+        "en": "Goblin"
+      },
+      "cost": "R",
+      "color": "R",
+      "power": 1,
+      "toughness": 1,
+      "keywords": [
+        "haste"
+      ],
+      "emoji": "👺",
+      "flavor": {
+        "ru": "Быстрый, злой и очень громкий.",
+        "en": "Fast, angry and very loud."
+      },
+      "art": "tmp/pdfs/card-art/goblin_scout.jpg"
+    },
+    "fire_imp": {
+      "id": "fire_imp",
+      "name": {
+        "ru": "Огненный бес",
+        "en": "Fire Imp"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Бес",
+        "en": "Imp"
+      },
+      "cost": "1R",
+      "color": "R",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [],
+      "emoji": "😈",
+      "flavor": {
+        "ru": "Маленький, но кусается.",
+        "en": "Small, but it bites."
+      },
+      "art": "tmp/pdfs/card-art/fire_imp.jpg"
+    },
+    "goblin_berserk": {
+      "id": "goblin_berserk",
+      "name": {
+        "ru": "Гоблин-берсерк",
+        "en": "Goblin Berserker"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Гоблин",
+        "en": "Goblin"
+      },
+      "cost": "2R",
+      "color": "R",
+      "power": 3,
+      "toughness": 2,
+      "keywords": [
+        "haste"
+      ],
+      "emoji": "🪓",
+      "art": "tmp/pdfs/card-art/goblin_berserk.jpg"
+    },
+    "fire_giant": {
+      "id": "fire_giant",
+      "name": {
+        "ru": "Огненный великан",
+        "en": "Fire Giant"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Великан",
+        "en": "Giant"
+      },
+      "cost": "4R",
+      "color": "R",
+      "power": 5,
+      "toughness": 3,
+      "keywords": [
+        "trample"
+      ],
+      "emoji": "👹",
+      "art": "tmp/pdfs/card-art/fire_giant.jpg"
+    },
+    "red_dragon": {
+      "id": "red_dragon",
+      "name": {
+        "ru": "Красный дракон",
+        "en": "Red Dragon"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Дракон",
+        "en": "Dragon"
+      },
+      "cost": "4RR",
+      "color": "R",
+      "power": 4,
+      "toughness": 4,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🐉",
+      "flavor": {
+        "ru": "Небо горит.",
+        "en": "The sky is burning."
+      },
+      "art": "tmp/pdfs/card-art/red_dragon.jpg"
+    },
+    "shock": {
+      "id": "shock",
+      "name": {
+        "ru": "Шок",
+        "en": "Shock"
+      },
+      "type": "instant",
+      "cost": "R",
+      "color": "R",
+      "emoji": "⚡",
+      "text": {
+        "ru": "Шок наносит 2 повреждения любой цели.",
+        "en": "Shock deals 2 damage to any target."
+      },
+      "effect": {
+        "kind": "damage",
+        "amount": 2,
+        "targets": [
+          "any"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/shock.jpg"
+    },
+    "bolt": {
+      "id": "bolt",
+      "name": {
+        "ru": "Молния",
+        "en": "Lightning Bolt"
+      },
+      "type": "instant",
+      "cost": "R",
+      "color": "R",
+      "emoji": "🌩️",
+      "text": {
+        "ru": "Молния наносит 3 повреждения любой цели.",
+        "en": "Lightning Bolt deals 3 damage to any target."
+      },
+      "effect": {
+        "kind": "damage",
+        "amount": 3,
+        "targets": [
+          "any"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/bolt.jpg"
+    },
+    "lava_axe": {
+      "id": "lava_axe",
+      "name": {
+        "ru": "Лавовый топор",
+        "en": "Lava Axe"
+      },
+      "type": "sorcery",
+      "cost": "4R",
+      "color": "R",
+      "emoji": "☄️",
+      "text": {
+        "ru": "Лавовый топор наносит 5 повреждений целевому игроку.",
+        "en": "Lava Axe deals 5 damage to target player."
+      },
+      "effect": {
+        "kind": "damage",
+        "amount": 5,
+        "targets": [
+          "player"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/lava_axe.jpg"
+    },
+    "wolf": {
+      "id": "wolf",
+      "name": {
+        "ru": "Лесной волк",
+        "en": "Forest Wolf"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Волк",
+        "en": "Wolf"
+      },
+      "cost": "1G",
+      "color": "G",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [],
+      "emoji": "🐺",
+      "art": "tmp/pdfs/card-art/wolf.jpg"
+    },
+    "boar": {
+      "id": "boar",
+      "name": {
+        "ru": "Дикий кабан",
+        "en": "Wild Boar"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Кабан",
+        "en": "Boar"
+      },
+      "cost": "2G",
+      "color": "G",
+      "power": 3,
+      "toughness": 3,
+      "keywords": [],
+      "emoji": "🐗",
+      "art": "tmp/pdfs/card-art/boar.jpg"
+    },
+    "spider": {
+      "id": "spider",
+      "name": {
+        "ru": "Гигантский паук",
+        "en": "Giant Spider"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Паук",
+        "en": "Spider"
+      },
+      "cost": "3G",
+      "color": "G",
+      "power": 2,
+      "toughness": 4,
+      "keywords": [
+        "reach"
+      ],
+      "emoji": "🕷️",
+      "art": "tmp/pdfs/card-art/spider.jpg"
+    },
+    "troll": {
+      "id": "troll",
+      "name": {
+        "ru": "Лесной тролль",
+        "en": "Forest Troll"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Тролль",
+        "en": "Troll"
+      },
+      "cost": "4G",
+      "color": "G",
+      "power": 4,
+      "toughness": 3,
+      "keywords": [
+        "trample"
+      ],
+      "emoji": "🧌",
+      "art": "tmp/pdfs/card-art/troll.jpg"
+    },
+    "oak": {
+      "id": "oak",
+      "name": {
+        "ru": "Древний дуб",
+        "en": "Ancient Oak"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Древесник",
+        "en": "Treefolk"
+      },
+      "cost": "4GG",
+      "color": "G",
+      "power": 4,
+      "toughness": 5,
+      "keywords": [],
+      "emoji": "🌳",
+      "flavor": {
+        "ru": "Он помнит первый рассвет.",
+        "en": "It remembers the first dawn."
+      },
+      "art": "tmp/pdfs/card-art/oak.jpg"
+    },
+    "wurm": {
+      "id": "wurm",
+      "name": {
+        "ru": "Вирм",
+        "en": "Wurm"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Вирм",
+        "en": "Wurm"
+      },
+      "cost": "5GG",
+      "color": "G",
+      "power": 7,
+      "toughness": 6,
+      "keywords": [
+        "trample"
+      ],
+      "emoji": "🐛",
+      "art": "tmp/pdfs/card-art/wurm.jpg"
+    },
+    "giant_growth": {
+      "id": "giant_growth",
+      "name": {
+        "ru": "Рост великана",
+        "en": "Giant Growth"
+      },
+      "type": "instant",
+      "cost": "G",
+      "color": "G",
+      "emoji": "🌿",
+      "text": {
+        "ru": "Целевое существо получает +3/+3 до конца хода.",
+        "en": "Target creature gets +3/+3 until end of turn."
+      },
+      "effect": {
+        "kind": "pump",
+        "power": 3,
+        "toughness": 3,
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/giant_growth.jpg"
+    },
+    "bite": {
+      "id": "bite",
+      "name": {
+        "ru": "Укус",
+        "en": "Bite"
+      },
+      "type": "sorcery",
+      "cost": "1G",
+      "color": "G",
+      "emoji": "🦷",
+      "text": {
+        "ru": "Целевое существо под вашим контролем наносит повреждения, равные своей силе, целевому существу под контролем противника.",
+        "en": "Target creature you control deals damage equal to its power to target creature an opponent controls."
+      },
+      "effect": {
+        "kind": "bite",
+        "targets": [
+          "ownCreature",
+          "oppCreature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/bite.jpg"
+    },
+    "soldier": {
+      "id": "soldier",
+      "name": {
+        "ru": "Пехотинец",
+        "en": "Foot Soldier"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Солдат",
+        "en": "Human Soldier"
+      },
+      "cost": "1W",
+      "color": "W",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [],
+      "emoji": "🛡️",
+      "art": "tmp/pdfs/card-art/soldier.jpg"
+    },
+    "knight": {
+      "id": "knight",
+      "name": {
+        "ru": "Рыцарь",
+        "en": "Knight"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Рыцарь",
+        "en": "Human Knight"
+      },
+      "cost": "1W",
+      "color": "W",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [
+        "first_strike"
+      ],
+      "emoji": "⚔️",
+      "art": "tmp/pdfs/card-art/knight.jpg"
+    },
+    "healer": {
+      "id": "healer",
+      "name": {
+        "ru": "Монах-целитель",
+        "en": "Healer Monk"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Монах",
+        "en": "Human Monk"
+      },
+      "cost": "W",
+      "color": "W",
+      "power": 1,
+      "toughness": 2,
+      "keywords": [
+        "lifelink"
+      ],
+      "emoji": "🙏",
+      "art": "tmp/pdfs/card-art/healer.jpg"
+    },
+    "pegasus": {
+      "id": "pegasus",
+      "name": {
+        "ru": "Крылатый страж",
+        "en": "Winged Guardian"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Пегас",
+        "en": "Pegasus"
+      },
+      "cost": "2W",
+      "color": "W",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🕊️",
+      "art": "tmp/pdfs/card-art/pegasus.jpg"
+    },
+    "paladin": {
+      "id": "paladin",
+      "name": {
+        "ru": "Паладин",
+        "en": "Paladin"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Рыцарь",
+        "en": "Human Knight"
+      },
+      "cost": "2W",
+      "color": "W",
+      "power": 2,
+      "toughness": 3,
+      "keywords": [
+        "vigilance"
+      ],
+      "emoji": "🏇",
+      "art": "tmp/pdfs/card-art/paladin.jpg"
+    },
+    "angel": {
+      "id": "angel",
+      "name": {
+        "ru": "Ангел",
+        "en": "Angel"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ангел",
+        "en": "Angel"
+      },
+      "cost": "3WW",
+      "color": "W",
+      "power": 4,
+      "toughness": 4,
+      "keywords": [
+        "flying",
+        "vigilance"
+      ],
+      "emoji": "👼",
+      "art": "tmp/pdfs/card-art/angel.jpg"
+    },
+    "smite": {
+      "id": "smite",
+      "name": {
+        "ru": "Кара небес",
+        "en": "Smite"
+      },
+      "type": "instant",
+      "cost": "1W",
+      "color": "W",
+      "emoji": "✨",
+      "text": {
+        "ru": "Уничтожьте целевое атакующее или блокирующее существо.",
+        "en": "Destroy target attacking or blocking creature."
+      },
+      "effect": {
+        "kind": "destroy",
+        "targets": [
+          "combatCreature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/smite.jpg"
+    },
+    "blessing": {
+      "id": "blessing",
+      "name": {
+        "ru": "Благословение",
+        "en": "Blessing"
+      },
+      "type": "instant",
+      "cost": "W",
+      "color": "W",
+      "emoji": "🌟",
+      "text": {
+        "ru": "Целевое существо получает +2/+2 до конца хода.",
+        "en": "Target creature gets +2/+2 until end of turn."
+      },
+      "effect": {
+        "kind": "pump",
+        "power": 2,
+        "toughness": 2,
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/blessing.jpg"
+    },
+    "merfolk": {
+      "id": "merfolk",
+      "name": {
+        "ru": "Мерфолк-воин",
+        "en": "Merfolk Warrior"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Мерфолк",
+        "en": "Merfolk"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [],
+      "emoji": "🧜",
+      "art": "tmp/pdfs/card-art/merfolk.jpg"
+    },
+    "mage": {
+      "id": "mage",
+      "name": {
+        "ru": "Мудрец",
+        "en": "Sage"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Чародей",
+        "en": "Human Wizard"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 1,
+      "toughness": 1,
+      "keywords": [],
+      "emoji": "🧙",
+      "text": {
+        "ru": "Когда Мудрец выходит на поле битвы, возьмите карту.",
+        "en": "When Sage enters the battlefield, draw a card."
+      },
+      "etb": {
+        "kind": "draw",
+        "amount": 1
+      },
+      "art": "tmp/pdfs/card-art/mage.jpg"
+    },
+    "illusion": {
+      "id": "illusion",
+      "name": {
+        "ru": "Летучая иллюзия",
+        "en": "Flying Illusion"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Иллюзия",
+        "en": "Illusion"
+      },
+      "cost": "2U",
+      "color": "U",
+      "power": 3,
+      "toughness": 1,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "👻",
+      "art": "tmp/pdfs/card-art/illusion.jpg"
+    },
+    "spirit": {
+      "id": "spirit",
+      "name": {
+        "ru": "Дух ветра",
+        "en": "Wind Spirit"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Дух",
+        "en": "Spirit"
+      },
+      "cost": "3U",
+      "color": "U",
+      "power": 2,
+      "toughness": 3,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🌬️",
+      "art": "tmp/pdfs/card-art/spirit.jpg"
+    },
+    "serpent": {
+      "id": "serpent",
+      "name": {
+        "ru": "Морской змей",
+        "en": "Sea Serpent"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Змей",
+        "en": "Serpent"
+      },
+      "cost": "5U",
+      "color": "U",
+      "power": 5,
+      "toughness": 5,
+      "keywords": [],
+      "emoji": "🐍",
+      "art": "tmp/pdfs/card-art/serpent.jpg"
+    },
+    "djinn": {
+      "id": "djinn",
+      "name": {
+        "ru": "Джинн",
+        "en": "Djinn"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Джинн",
+        "en": "Djinn"
+      },
+      "cost": "4UU",
+      "color": "U",
+      "power": 4,
+      "toughness": 4,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🧞",
+      "art": "tmp/pdfs/card-art/djinn.jpg"
+    },
+    "unsummon": {
+      "id": "unsummon",
+      "name": {
+        "ru": "Отзыв",
+        "en": "Unsummon"
+      },
+      "type": "instant",
+      "cost": "U",
+      "color": "U",
+      "emoji": "🌀",
+      "text": {
+        "ru": "Верните целевое существо в руку его владельца.",
+        "en": "Return target creature to its owner's hand."
+      },
+      "effect": {
+        "kind": "bounce",
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/unsummon.jpg"
+    },
+    "divination": {
+      "id": "divination",
+      "name": {
+        "ru": "Прозрение",
+        "en": "Divination"
+      },
+      "type": "sorcery",
+      "cost": "2U",
+      "color": "U",
+      "emoji": "🔮",
+      "text": {
+        "ru": "Возьмите две карты.",
+        "en": "Draw two cards."
+      },
+      "effect": {
+        "kind": "draw",
+        "amount": 2,
+        "targets": []
+      },
+      "art": "tmp/pdfs/card-art/divination.jpg"
+    },
+    "counterspell": {
+      "id": "counterspell",
+      "name": {
+        "ru": "Контрзаклинание",
+        "en": "Counterspell"
+      },
+      "type": "instant",
+      "cost": "UU",
+      "color": "U",
+      "emoji": "🚫",
+      "text": {
+        "ru": "Отмените целевое заклинание.",
+        "en": "Counter target spell."
+      },
+      "effect": {
+        "kind": "counter",
+        "targets": [
+          "spell"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/counterspell.jpg"
+    },
+    "carnophage": {
+      "id": "carnophage",
+      "name": {
+        "ru": "Карнофаг",
+        "en": "Carnophage"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Зомби",
+        "en": "Zombie"
+      },
+      "cost": "B",
+      "color": "B",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [],
+      "emoji": "🧟",
+      "text": {
+        "ru": "В начале вашей поддержки пожертвуйте Карнофага, если не заплатите 1 жизнь.",
+        "en": "At the beginning of your upkeep, sacrifice Carnophage unless you pay 1 life."
+      },
+      "upkeep": {
+        "kind": "payLifeOrSacrifice",
+        "amount": 1
+      },
+      "art": "tmp/pdfs/card-art/carnophage.jpg"
+    },
+    "black_knight": {
+      "id": "black_knight",
+      "name": {
+        "ru": "Чёрный рыцарь",
+        "en": "Black Knight"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Рыцарь",
+        "en": "Human Knight"
+      },
+      "cost": "BB",
+      "color": "B",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "first_strike"
+      ],
+      "protection": [
+        "W"
+      ],
+      "emoji": "♞",
+      "text": {
+        "ru": "Защита от белого.",
+        "en": "Protection from white."
+      },
+      "art": "tmp/pdfs/card-art/black_knight.jpg"
+    },
+    "hypnotic_specter": {
+      "id": "hypnotic_specter",
+      "name": {
+        "ru": "Гипнотический призрак",
+        "en": "Hypnotic Specter"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Призрак",
+        "en": "Specter"
+      },
+      "cost": "1BB",
+      "color": "B",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "👻",
+      "text": {
+        "ru": "Когда он наносит игроку боевой урон, тот игрок случайно сбрасывает карту.",
+        "en": "Whenever it deals combat damage to a player, that player discards a card at random."
+      },
+      "combatDamagePlayer": {
+        "kind": "discardRandom",
+        "amount": 1,
+        "player": "damagedPlayer"
+      },
+      "art": "tmp/pdfs/card-art/hypnotic_specter.jpg"
+    },
+    "nekrataal": {
+      "id": "nekrataal",
+      "name": {
+        "ru": "Некратаал",
+        "en": "Nekrataal"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Убийца",
+        "en": "Human Assassin"
+      },
+      "cost": "2BB",
+      "color": "B",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [
+        "first_strike"
+      ],
+      "emoji": "🗡️",
+      "text": {
+        "ru": "Когда Некратаал выходит на поле битвы, уничтожьте целевое не-чёрное существо.",
+        "en": "When Nekrataal enters the battlefield, destroy target nonblack creature."
+      },
+      "etb": {
+        "kind": "destroy",
+        "targets": [
+          "nonBlackCreature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/nekrataal.jpg"
+    },
+    "sengir_vampire": {
+      "id": "sengir_vampire",
+      "name": {
+        "ru": "Сэнгирский вампир",
+        "en": "Sengir Vampire"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Вампир",
+        "en": "Vampire"
+      },
+      "cost": "3BB",
+      "color": "B",
+      "power": 4,
+      "toughness": 4,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🧛",
+      "text": {
+        "ru": "Когда существо, которому Сэнгирский вампир нанёс повреждения в этот ход, погибает, положите на него жетон +1/+1.",
+        "en": "Whenever a creature dealt damage by Sengir Vampire this turn dies, put a +1/+1 counter on Sengir Vampire."
+      },
+      "creatureDiesAfterDamage": {
+        "kind": "addCounter",
+        "power": 1,
+        "toughness": 1
+      },
+      "art": "tmp/pdfs/card-art/sengir_vampire.jpg"
+    },
+    "terror": {
+      "id": "terror",
+      "name": {
+        "ru": "Ужас",
+        "en": "Terror"
+      },
+      "type": "instant",
+      "cost": "1B",
+      "color": "B",
+      "emoji": "☠️",
+      "text": {
+        "ru": "Уничтожьте целевое не-чёрное существо.",
+        "en": "Destroy target nonblack creature."
+      },
+      "effect": {
+        "kind": "destroy",
+        "targets": [
+          "nonBlackCreature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/terror.jpg"
+    },
+    "dark_ritual": {
+      "id": "dark_ritual",
+      "name": {
+        "ru": "Тёмный ритуал",
+        "en": "Dark Ritual"
+      },
+      "type": "instant",
+      "cost": "B",
+      "color": "B",
+      "emoji": "🕯️",
+      "text": {
+        "ru": "Добавьте три чёрные маны.",
+        "en": "Add three black mana."
+      },
+      "effect": {
+        "kind": "addMana",
+        "color": "B",
+        "manaName": {
+          "ru": "чёрные маны",
+          "en": "black mana"
+        },
+        "amount": 3,
+        "targets": []
+      },
+      "art": "tmp/pdfs/card-art/dark_ritual.jpg"
+    },
+    "coral_healer": {
+      "id": "coral_healer",
+      "name": {
+        "ru": "Коралловая целительница",
+        "en": "Coral Healer"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Мерфолк Жрец",
+        "en": "Merfolk Cleric"
+      },
+      "cost": "W",
+      "color": "W",
+      "power": 1,
+      "toughness": 3,
+      "keywords": [
+        "lifelink"
+      ],
+      "emoji": "🧜",
+      "flavor": {
+        "ru": "Её песня возвращает силы даже после самой долгой бури.",
+        "en": "Her song restores strength after even the longest storm."
+      },
+      "art": "tmp/pdfs/card-art/coral_healer.jpg"
+    },
+    "silvergill_adept": {
+      "id": "silvergill_adept",
+      "name": {
+        "ru": "Сереброжаберная адептка",
+        "en": "Silvergill Adept"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Мерфолк Чародей",
+        "en": "Merfolk Wizard"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [],
+      "emoji": "🧜",
+      "text": {
+        "ru": "Когда Сереброжаберная адептка выходит на поле битвы, возьмите карту.",
+        "en": "When Silvergill Adept enters the battlefield, draw a card."
+      },
+      "etb": {
+        "kind": "draw",
+        "amount": 1
+      },
+      "art": "tmp/pdfs/card-art/silvergill_adept.jpg"
+    },
+    "tideguard_mermaid": {
+      "id": "tideguard_mermaid",
+      "name": {
+        "ru": "Русалка-стражница прилива",
+        "en": "Tideguard Mermaid"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Мерфолк Воин",
+        "en": "Merfolk Warrior"
+      },
+      "cost": "WU",
+      "color": "U",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "vigilance",
+        "hexproof"
+      ],
+      "emoji": "🧜",
+      "flavor": {
+        "ru": "Морская пена скрывает её от вражеских чар.",
+        "en": "Sea foam hides her from hostile magic."
+      },
+      "art": "tmp/pdfs/card-art/tideguard_mermaid.jpg"
+    },
+    "watertrap_weaver": {
+      "id": "watertrap_weaver",
+      "name": {
+        "ru": "Ткачиха водяных пут",
+        "en": "Watertrap Weaver"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Мерфолк Чародей",
+        "en": "Merfolk Wizard"
+      },
+      "cost": "2U",
+      "color": "U",
+      "power": 2,
+      "toughness": 3,
+      "keywords": [
+        "flash"
+      ],
+      "emoji": "🧜",
+      "text": {
+        "ru": "Когда Ткачиха водяных пут выходит на поле битвы, поверните целевое существо. Оно не разворачивается во время следующего шага разворота своего владельца.",
+        "en": "When Watertrap Weaver enters the battlefield, tap target creature. It does not untap during its controller's next untap step."
+      },
+      "etb": {
+        "kind": "tap",
+        "skipUntap": 1,
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/watertrap_weaver.jpg"
+    },
+    "tide_seraph": {
+      "id": "tide_seraph",
+      "name": {
+        "ru": "Серафим прилива",
+        "en": "Tide Seraph"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ангел Мерфолк",
+        "en": "Angel Merfolk"
+      },
+      "cost": "3WU",
+      "color": "U",
+      "power": 3,
+      "toughness": 4,
+      "keywords": [
+        "flying",
+        "lifelink"
+      ],
+      "emoji": "🧜",
+      "flavor": {
+        "ru": "Она хранит риф там, где свет встречается с глубиной.",
+        "en": "She guards the reef where light meets the deep."
+      },
+      "art": "tmp/pdfs/card-art/tide_seraph.jpg"
+    },
+    "frost_breath": {
+      "id": "frost_breath",
+      "name": {
+        "ru": "Ледяное дыхание",
+        "en": "Frost Breath"
+      },
+      "type": "instant",
+      "cost": "1U",
+      "color": "U",
+      "emoji": "❄️",
+      "text": {
+        "ru": "Поверните целевое существо. Оно не разворачивается во время следующего шага разворота своего владельца.",
+        "en": "Tap target creature. It does not untap during its controller's next untap step."
+      },
+      "effect": {
+        "kind": "tap",
+        "skipUntap": 1,
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": "tmp/pdfs/card-art/frost_breath.jpg"
+    },
+    "healing_salve": {
+      "id": "healing_salve",
+      "name": {
+        "ru": "Целебная мазь",
+        "en": "Healing Salve"
+      },
+      "type": "instant",
+      "cost": "W",
+      "color": "W",
+      "emoji": "💧",
+      "text": {
+        "ru": "Вы получаете 3 жизни.",
+        "en": "You gain 3 life."
+      },
+      "effect": {
+        "kind": "gainLife",
+        "amount": 3,
+        "targets": []
+      },
+      "art": "tmp/pdfs/card-art/healing_salve.jpg"
+    },
+    "ethereal_haze": {
+      "id": "ethereal_haze",
+      "name": {
+        "ru": "Эфирная мгла",
+        "en": "Ethereal Haze"
+      },
+      "type": "instant",
+      "cost": "W",
+      "color": "W",
+      "emoji": "🌫️",
+      "text": {
+        "ru": "Предотвратите все боевые повреждения, которые должны быть нанесены в этот ход.",
+        "en": "Prevent all combat damage that would be dealt this turn."
+      },
+      "effect": {
+        "kind": "preventCombatDamage",
+        "targets": []
+      },
+      "art": "tmp/pdfs/card-art/ethereal_haze.jpg"
+    }
+  },
+  "decks": {
+    "red": {
+      "id": "red",
+      "name": {
+        "ru": "Пламя",
+        "en": "Flame"
+      },
+      "color": "R",
+      "emoji": "🔥",
+      "desc": {
+        "ru": "Быстрые гоблины и молнии. Бей быстро!",
+        "en": "Fast goblins and lightning. Hit hard, hit fast!"
+      },
+      "cards": [
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "mountain",
+        "goblin_scout",
+        "goblin_scout",
+        "goblin_scout",
+        "goblin_scout",
+        "fire_imp",
+        "fire_imp",
+        "fire_imp",
+        "fire_imp",
+        "goblin_berserk",
+        "goblin_berserk",
+        "goblin_berserk",
+        "goblin_berserk",
+        "fire_giant",
+        "fire_giant",
+        "red_dragon",
+        "shock",
+        "shock",
+        "shock",
+        "shock",
+        "bolt",
+        "bolt",
+        "bolt",
+        "lava_axe"
+      ]
+    },
+    "green": {
+      "id": "green",
+      "name": {
+        "ru": "Лес",
+        "en": "Forest"
+      },
+      "color": "G",
+      "emoji": "🌳",
+      "desc": {
+        "ru": "Огромные звери и рост. Растопчи всех!",
+        "en": "Huge beasts and growth. Trample them all!"
+      },
+      "cards": [
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "forest",
+        "wolf",
+        "wolf",
+        "wolf",
+        "wolf",
+        "boar",
+        "boar",
+        "boar",
+        "boar",
+        "spider",
+        "spider",
+        "spider",
+        "troll",
+        "troll",
+        "troll",
+        "oak",
+        "oak",
+        "wurm",
+        "giant_growth",
+        "giant_growth",
+        "giant_growth",
+        "giant_growth",
+        "bite",
+        "bite"
+      ]
+    },
+    "white": {
+      "id": "white",
+      "name": {
+        "ru": "Свет",
+        "en": "Light"
+      },
+      "color": "W",
+      "emoji": "☀️",
+      "desc": {
+        "ru": "Рыцари, ангелы и защита. Держи строй!",
+        "en": "Knights, angels and defense. Hold the line!"
+      },
+      "cards": [
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "soldier",
+        "soldier",
+        "soldier",
+        "soldier",
+        "knight",
+        "knight",
+        "knight",
+        "healer",
+        "healer",
+        "healer",
+        "pegasus",
+        "pegasus",
+        "pegasus",
+        "paladin",
+        "paladin",
+        "paladin",
+        "angel",
+        "angel",
+        "smite",
+        "smite",
+        "smite",
+        "blessing",
+        "blessing"
+      ]
+    },
+    "blue": {
+      "id": "blue",
+      "name": {
+        "ru": "Вода",
+        "en": "Water"
+      },
+      "color": "U",
+      "emoji": "🌊",
+      "desc": {
+        "ru": "Летуны, хитрость и отмена заклинаний.",
+        "en": "Fliers, tricks and counterspells."
+      },
+      "cards": [
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "merfolk",
+        "merfolk",
+        "merfolk",
+        "merfolk",
+        "mage",
+        "mage",
+        "illusion",
+        "illusion",
+        "illusion",
+        "spirit",
+        "spirit",
+        "spirit",
+        "serpent",
+        "serpent",
+        "djinn",
+        "unsummon",
+        "unsummon",
+        "unsummon",
+        "divination",
+        "divination",
+        "counterspell",
+        "counterspell",
+        "counterspell"
+      ]
+    },
+    "black": {
+      "id": "black",
+      "name": {
+        "ru": "Могила",
+        "en": "Grave"
+      },
+      "color": "B",
+      "emoji": "🪦",
+      "desc": {
+        "ru": "Жертвы, сброс карт и вампиры. Лишай противника ресурсов.",
+        "en": "Sacrifices, discard and vampires. Strip the opponent of resources."
+      },
+      "cards": [
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "swamp",
+        "carnophage",
+        "carnophage",
+        "carnophage",
+        "carnophage",
+        "black_knight",
+        "black_knight",
+        "black_knight",
+        "black_knight",
+        "hypnotic_specter",
+        "hypnotic_specter",
+        "hypnotic_specter",
+        "hypnotic_specter",
+        "nekrataal",
+        "nekrataal",
+        "nekrataal",
+        "sengir_vampire",
+        "sengir_vampire",
+        "terror",
+        "terror",
+        "terror",
+        "dark_ritual",
+        "dark_ritual",
+        "dark_ritual"
+      ]
+    },
+    "tide": {
+      "id": "tide",
+      "name": {
+        "ru": "Прилив",
+        "en": "Tide"
+      },
+      "color": "U",
+      "emoji": "🧜",
+      "desc": {
+        "ru": "Русалки, лечение и защитные чары. Берегите своих и замедляйте врага.",
+        "en": "Merfolk, healing and protective magic. Keep yours safe and slow the enemy."
+      },
+      "cards": [
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "island",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "plains",
+        "coral_healer",
+        "coral_healer",
+        "coral_healer",
+        "coral_healer",
+        "silvergill_adept",
+        "silvergill_adept",
+        "silvergill_adept",
+        "silvergill_adept",
+        "tideguard_mermaid",
+        "tideguard_mermaid",
+        "tideguard_mermaid",
+        "watertrap_weaver",
+        "watertrap_weaver",
+        "watertrap_weaver",
+        "tide_seraph",
+        "tide_seraph",
+        "frost_breath",
+        "frost_breath",
+        "frost_breath",
+        "healing_salve",
+        "healing_salve",
+        "healing_salve",
+        "ethereal_haze"
+      ]
+    }
+  }
+}

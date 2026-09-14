@@ -4,7 +4,7 @@
 
   // Bilingual literal: L('по-русски', 'in English') -> {ru, en}; resolved by MTG.txt() at display time.
   const L = (ru, en) => ({ ru, en });
-  const KEYWORDS = ['flying', 'haste', 'trample', 'vigilance', 'first_strike', 'lifelink', 'deathtouch', 'reach'];
+  const KEYWORDS = ['flying', 'haste', 'trample', 'vigilance', 'first_strike', 'lifelink', 'deathtouch', 'reach', 'flash', 'hexproof'];
 
   // ---- card definitions -------------------------------------------------
   // cost: string like "2R", "GG", "" (land). effect targets: array of specs.
@@ -136,6 +136,34 @@
     text: L('Добавьте три чёрные маны.', 'Add three black mana.'),
     effect: { kind: 'addMana', color: 'B', manaName: L('чёрные маны', 'black mana'), amount: 3, targets: [] } });
 
+  // TIDE — classic white-blue Merfolk protection, healing and tempo.
+  def({ id: 'coral_healer', name: L('Коралловая целительница', 'Coral Healer'), type: 'creature', subtype: L('Мерфолк Жрец', 'Merfolk Cleric'), cost: 'W', color: 'W',
+    power: 1, toughness: 3, keywords: ['lifelink'], emoji: '🧜',
+    flavor: L('Её песня возвращает силы даже после самой долгой бури.', 'Her song restores strength after even the longest storm.') });
+  def({ id: 'silvergill_adept', name: L('Сереброжаберная адептка', 'Silvergill Adept'), type: 'creature', subtype: L('Мерфолк Чародей', 'Merfolk Wizard'), cost: '1U', color: 'U',
+    power: 2, toughness: 1, keywords: [], emoji: '🧜',
+    text: L('Когда Сереброжаберная адептка выходит на поле битвы, возьмите карту.', 'When Silvergill Adept enters the battlefield, draw a card.'),
+    etb: { kind: 'draw', amount: 1 } });
+  def({ id: 'tideguard_mermaid', name: L('Русалка-стражница прилива', 'Tideguard Mermaid'), type: 'creature', subtype: L('Мерфолк Воин', 'Merfolk Warrior'), cost: 'WU', color: 'U',
+    power: 2, toughness: 2, keywords: ['vigilance', 'hexproof'], emoji: '🧜',
+    flavor: L('Морская пена скрывает её от вражеских чар.', 'Sea foam hides her from hostile magic.') });
+  def({ id: 'watertrap_weaver', name: L('Ткачиха водяных пут', 'Watertrap Weaver'), type: 'creature', subtype: L('Мерфолк Чародей', 'Merfolk Wizard'), cost: '2U', color: 'U',
+    power: 2, toughness: 3, keywords: ['flash'], emoji: '🧜',
+    text: L('Когда Ткачиха водяных пут выходит на поле битвы, поверните целевое существо. Оно не разворачивается во время следующего шага разворота своего владельца.', 'When Watertrap Weaver enters the battlefield, tap target creature. It does not untap during its controller\'s next untap step.'),
+    etb: { kind: 'tap', skipUntap: 1, targets: ['creature'] } });
+  def({ id: 'tide_seraph', name: L('Серафим прилива', 'Tide Seraph'), type: 'creature', subtype: L('Ангел Мерфолк', 'Angel Merfolk'), cost: '3WU', color: 'U',
+    power: 3, toughness: 4, keywords: ['flying', 'lifelink'], emoji: '🧜',
+    flavor: L('Она хранит риф там, где свет встречается с глубиной.', 'She guards the reef where light meets the deep.') });
+  def({ id: 'frost_breath', name: L('Ледяное дыхание', 'Frost Breath'), type: 'instant', cost: '1U', color: 'U', emoji: '❄️',
+    text: L('Поверните целевое существо. Оно не разворачивается во время следующего шага разворота своего владельца.', 'Tap target creature. It does not untap during its controller\'s next untap step.'),
+    effect: { kind: 'tap', skipUntap: 1, targets: ['creature'] } });
+  def({ id: 'healing_salve', name: L('Целебная мазь', 'Healing Salve'), type: 'instant', cost: 'W', color: 'W', emoji: '💧',
+    text: L('Вы получаете 3 жизни.', 'You gain 3 life.'),
+    effect: { kind: 'gainLife', amount: 3, targets: [] } });
+  def({ id: 'ethereal_haze', name: L('Эфирная мгла', 'Ethereal Haze'), type: 'instant', cost: 'W', color: 'W', emoji: '🌫️',
+    text: L('Предотвратите все боевые повреждения, которые должны быть нанесены в этот ход.', 'Prevent all combat damage that would be dealt this turn.'),
+    effect: { kind: 'preventCombatDamage', targets: [] } });
+
   // ---- decks ------------------------------------------------------------
   function list(pairs) {
     const out = [];
@@ -173,6 +201,12 @@
       desc: L('Жертвы, сброс карт и вампиры. Лишай противника ресурсов.', 'Sacrifices, discard and vampires. Strip the opponent of resources.'),
       cards: list([['swamp', 17], ['carnophage', 4], ['black_knight', 4], ['hypnotic_specter', 4],
         ['nekrataal', 3], ['sengir_vampire', 2], ['terror', 3], ['dark_ritual', 3]]),
+    },
+    tide: {
+      id: 'tide', name: L('Прилив', 'Tide'), color: 'U', emoji: '🧜',
+      desc: L('Русалки, лечение и защитные чары. Берегите своих и замедляйте врага.', 'Merfolk, healing and protective magic. Keep yours safe and slow the enemy.'),
+      cards: list([['island', 9], ['plains', 8], ['coral_healer', 4], ['silvergill_adept', 4], ['tideguard_mermaid', 3],
+        ['watertrap_weaver', 3], ['tide_seraph', 2], ['frost_breath', 3], ['healing_salve', 3], ['ethereal_haze', 1]]),
     },
   };
 
