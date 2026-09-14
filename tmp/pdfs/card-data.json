@@ -1111,8 +1111,8 @@
       ],
       "emoji": "🧜",
       "text": {
-        "ru": "Когда Ткачиха водяных пут выходит на поле битвы, поверните целевое существо. Оно не разворачивается во время следующего шага разворота своего владельца.",
-        "en": "When Watertrap Weaver enters the battlefield, tap target creature. It does not untap during its controller's next untap step."
+        "ru": "При выходе: поверните целевое существо. Оно не разворачивается при следующем развороте.",
+        "en": "When this enters: tap target creature. It skips its next untap."
       },
       "etb": {
         "kind": "tap",
