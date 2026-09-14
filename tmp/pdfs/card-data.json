@@ -1111,8 +1111,8 @@
       ],
       "emoji": "🧜",
       "text": {
-        "ru": "При выходе: поверните целевое существо. Оно не разворачивается при следующем развороте.",
-        "en": "When this enters: tap target creature. It skips its next untap."
+        "ru": "Поверните существо. Оно пропускает разворот.",
+        "en": "Tap a creature. It skips its untap."
       },
       "etb": {
         "kind": "tap",

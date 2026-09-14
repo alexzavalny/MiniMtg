@@ -149,7 +149,7 @@
     flavor: L('Морская пена скрывает её от вражеских чар.', 'Sea foam hides her from hostile magic.') });
   def({ id: 'watertrap_weaver', name: L('Ткачиха водяных пут', 'Watertrap Weaver'), type: 'creature', subtype: L('Мерфолк Чародей', 'Merfolk Wizard'), cost: '2U', color: 'U',
     power: 2, toughness: 3, keywords: ['flash'], emoji: '🧜',
-    text: L('При выходе: поверните целевое существо. Оно не разворачивается при следующем развороте.', 'When this enters: tap target creature. It skips its next untap.'),
+    text: L('Поверните существо. Оно пропускает разворот.', 'Tap a creature. It skips its untap.'),
     etb: { kind: 'tap', skipUntap: 1, targets: ['creature'] } });
   def({ id: 'tide_seraph', name: L('Серафим прилива', 'Tide Seraph'), type: 'creature', subtype: L('Ангел Мерфолк', 'Angel Merfolk'), cost: '3WU', color: 'U',
     power: 3, toughness: 4, keywords: ['flying', 'lifelink'], emoji: '🧜',
