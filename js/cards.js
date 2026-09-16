@@ -23,8 +23,7 @@
   def({ id: 'swamp', name: L('Болото', 'Swamp'), type: 'land', subtype: L('Болото', 'Swamp'), color: 'B', produces: 'B', emoji: '💀',
     text: L('Поверните: добавьте одну чёрную ману.', 'Tap: add one black mana.') });
 
-  // SONIC — blue-red speed, teamwork and gadgetry. These cards deliberately
-  // use the canvas emoji fallback rather than external character artwork.
+  // SONIC — blue-red speed, teamwork and gadgetry.
   def({ id: 'green_hill_zone', name: L('Зона Зелёных Холмов', 'Green Hill Zone'), type: 'land', subtype: L('Локация', 'Location'), color: 'U', produces: 'U', emoji: '🌴',
     text: L('Поверните: добавьте одну синюю ману.', 'Tap: add one blue mana.') });
   def({ id: 'chemical_plant_zone', name: L('Химический завод', 'Chemical Plant Zone'), type: 'land', subtype: L('Локация', 'Location'), color: 'R', produces: 'R', emoji: '🏭',

@@ -591,6 +591,14 @@
       // AI response ever becomes stale or invalid, do not spin forever and pin
       // a CPU core: abort the game with enough context to reproduce the fault.
       let decisions = 0;
+      const passPriority = async () => {
+        passes++;
+        if (passes >= 2) {
+          if (this.stack.length) { await this.resolveTop(); passes = 0; p = this.active; }
+          else return true;
+        } else p = 1 - p;
+        return false;
+      };
       for (;;) {
         if (++decisions > 200) throw new Error(`priority loop exceeded 200 decisions in ${this.phase}`);
         const req = this.buildPriorityRequest(p);
@@ -598,17 +606,18 @@
         if (this.shouldAutoPass(p, req)) resp = { action: 'pass' };
         else resp = await this.choose(p, req);
         if (!resp || resp.action === 'pass') {
-          passes++;
-          if (passes >= 2) {
-            if (this.stack.length) { await this.resolveTop(); passes = 0; p = this.active; }
-            else break;
-          } else p = 1 - p;
+          if (await passPriority()) break;
         } else if (resp.action === 'land') {
           if (await this.playLand(p, resp.cardId)) passes = 0;
+          else if (await passPriority()) break;
         } else if (resp.action === 'tap') {
-          await this.tapForMana(p, resp.cardId);
+          if (await this.tapForMana(p, resp.cardId)) passes = 0;
+          else if (await passPriority()) break;
         } else if (resp.action === 'cast') {
           if (await this.castSpell(p, resp.cardId, resp.targets)) { passes = 1; p = 1 - p; }
+          else if (await passPriority()) break;
+        } else {
+          if (await passPriority()) break;
         }
       }
       await this.emptyPools();

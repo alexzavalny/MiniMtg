@@ -10,7 +10,7 @@ fs.mkdirSync(out, { recursive: true });
 const context = { globalThis: {}, console };
 context.window = undefined;
 vm.createContext(context);
-for (const file of ['js/i18n.js', 'js/cards.js', 'assets/card-art-data.js', 'assets/black-card-art-data.js', 'assets/tide-card-art-data.js']) {
+for (const file of ['js/i18n.js', 'js/cards.js', 'assets/card-art-data.js', 'assets/black-card-art-data.js', 'assets/tide-card-art-data.js', 'assets/sonic-card-art-data.js']) {
   vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });
 }
 const MTG = context.globalThis.MTG;

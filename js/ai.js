@@ -88,8 +88,10 @@
     const fogs = byKind('preventCombatDamage');
     const flashCreatures = castable.filter((c) => c.def.type === 'creature' && g.hasKw(c, 'flash')).sort((a, b) => MTG.cmc(b.def) - MTG.cmc(a.def));
       const artifacts = castable.filter((c) => c.def.type === 'artifact').sort((a, b) => MTG.cmc(a.def) - MTG.cmc(b.def));
-    const bestKillable = (amount, minValue) => {
-      const cands = oppCreatures.filter((c) => g.getToughness(c) - c.damage <= amount);
+    const bestKillable = (amount, minValue, source) => {
+      const spec = source && source.def.effect.targets.includes('oppCreature') ? 'oppCreature' : 'creature';
+      const cands = oppCreatures.filter((c) => g.getToughness(c) - c.damage <= amount
+        && (!source || g.validTargets(p, spec, source).some((t) => t.kind === 'card' && t.id === c.id)));
       cands.sort((a, b) => value(g, b) - value(g, a));
       return cands.length && value(g, cands[0]) >= minValue ? cands[0] : null;
     };
@@ -115,13 +117,13 @@
       }
       // removal on threats
       for (const b of burns.sort((a, c) => c.def.effect.amount - a.def.effect.amount)) {
-        const t = bestKillable(b.def.effect.amount, me.life <= 10 ? 2 : 3.5);
+        const t = bestKillable(b.def.effect.amount, me.life <= 10 ? 2 : 3.5, b);
         if (t) return cast(b, [T.card(t)]);
       }
       const bites = byKind('bite');
       if (bites.length && myCreatures.length && oppCreatures.length) {
         const src = myCreatures.slice().sort((a, b) => g.getPower(b) - g.getPower(a))[0];
-        const t = bestKillable(g.getPower(src), 3);
+        const t = bestKillable(g.getPower(src), 3, bites[0]);
         if (t) return cast(bites[0], [T.card(src), T.card(t)]);
       }
       const draws = byKind('draw');
@@ -234,7 +236,7 @@
     if (!myTurn && ph === 'end') {
       if (lifeGains.length && me.life <= 8) return cast(lifeGains[0]);
       for (const b of burns.sort((a, c) => c.def.effect.amount - a.def.effect.amount)) {
-        const t = bestKillable(b.def.effect.amount, 3);
+        const t = bestKillable(b.def.effect.amount, 3, b);
         if (t) return cast(b, [T.card(t)]);
         if (opp.life <= 8) return cast(b, [T.player(1 - p)]);
       }

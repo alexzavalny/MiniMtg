@@ -55,7 +55,8 @@ function hand(g, player, defId) { const c = card(g, player, defId); g.removeFrom
     const g = game('sonic', 'red');
     g.active = 0; g.phase = 'main1';
     g.ai = () => ({ action: 'cast', cardId: -1, targets: [] });
-    await assert.rejects(g.priorityRound(), /priority loop exceeded 200 decisions/, 'an invalid AI action must fail instead of spinning forever');
+    await g.priorityRound();
+    assert.equal(g.stack.length, 0, 'an invalid AI action is treated as a pass instead of spinning forever');
   }
 
   console.log('PASS: Sonic deck rules');

@@ -118,7 +118,7 @@
         "ru": "Поверните: добавьте одну синюю ману.",
         "en": "Tap: add one blue mana."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/green_hill_zone.jpg"
     },
     "chemical_plant_zone": {
       "id": "chemical_plant_zone",
@@ -138,7 +138,7 @@
         "ru": "Поверните: добавьте одну красную ману.",
         "en": "Tap: add one red mana."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/chemical_plant_zone.jpg"
     },
     "sonic_the_hedgehog": {
       "id": "sonic_the_hedgehog",
@@ -163,7 +163,7 @@
         "ru": "Никто не обгонит героя, который уже мчится к цели.",
         "en": "Nobody outruns a hero already racing toward the goal."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/sonic_the_hedgehog.jpg"
     },
     "miles_tails_prower": {
       "id": "miles_tails_prower",
@@ -192,7 +192,7 @@
         "kind": "draw",
         "amount": 1
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/miles_tails_prower.jpg"
     },
     "knuckles_the_echidna": {
       "id": "knuckles_the_echidna",
@@ -217,7 +217,7 @@
         "ru": "Мастер Изумруда не сдаёт пост.",
         "en": "The Master Emerald’s guardian never leaves his post."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/knuckles_the_echidna.jpg"
     },
     "amy_rose": {
       "id": "amy_rose",
@@ -242,7 +242,7 @@
         "ru": "Пико-Пико молот всегда успевает вовремя.",
         "en": "The Piko Piko Hammer always arrives on time."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/amy_rose.jpg"
     },
     "shadow_the_hedgehog": {
       "id": "shadow_the_hedgehog",
@@ -267,7 +267,7 @@
         "ru": "Хаос-контроль не терпит промедления.",
         "en": "Chaos Control has no time for hesitation."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/shadow_the_hedgehog.jpg"
     },
     "rouge_the_bat": {
       "id": "rouge_the_bat",
@@ -292,7 +292,7 @@
         "ru": "Сокровища лучше искать сверху.",
         "en": "Treasures are easier to spot from above."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/rouge_the_bat.jpg"
     },
     "cream_and_cheese": {
       "id": "cream_and_cheese",
@@ -317,7 +317,7 @@
         "ru": "Маленькая помощь делает команду сильнее.",
         "en": "A little help makes the whole team stronger."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/cream_and_cheese.jpg"
     },
     "blaze_the_cat": {
       "id": "blaze_the_cat",
@@ -342,7 +342,7 @@
         "ru": "Её пламя защищает, а не сжигает друзей.",
         "en": "Her flame protects rather than harms her friends."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/blaze_the_cat.jpg"
     },
     "silver_the_hedgehog": {
       "id": "silver_the_hedgehog",
@@ -374,7 +374,7 @@
           "creature"
         ]
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/silver_the_hedgehog.jpg"
     },
     "vector_the_crocodile": {
       "id": "vector_the_crocodile",
@@ -397,7 +397,7 @@
         "ru": "Дело раскрыто, когда команда держится вместе.",
         "en": "A case is cracked when the team sticks together."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/vector_the_crocodile.jpg"
     },
     "espio_the_chameleon": {
       "id": "espio_the_chameleon",
@@ -422,7 +422,7 @@
         "ru": "Его почти невозможно заметить до удара.",
         "en": "He is almost impossible to spot before the strike."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/espio_the_chameleon.jpg"
     },
     "charmy_bee": {
       "id": "charmy_bee",
@@ -448,7 +448,7 @@
         "ru": "Самый маленький детектив — самый быстрый.",
         "en": "The smallest detective is the fastest."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/charmy_bee.jpg"
     },
     "big_the_cat": {
       "id": "big_the_cat",
@@ -473,7 +473,7 @@
         "ru": "Фрог всегда знает короткий путь.",
         "en": "Froggy always knows the shortcut."
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/big_the_cat.jpg"
     },
     "doctor_eggman": {
       "id": "doctor_eggman",
@@ -503,7 +503,7 @@
           "any"
         ]
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/doctor_eggman.jpg"
     },
     "power_sneakers": {
       "id": "power_sneakers",
@@ -528,7 +528,7 @@
         "power": 1,
         "toughness": 0
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/power_sneakers.jpg"
     },
     "shield_monitor": {
       "id": "shield_monitor",
@@ -553,7 +553,7 @@
         "power": 0,
         "toughness": 1
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/shield_monitor.jpg"
     },
     "chaos_emerald": {
       "id": "chaos_emerald",
@@ -582,7 +582,7 @@
         "power": 1,
         "toughness": 1
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/chaos_emerald.jpg"
     },
     "ring_cache": {
       "id": "ring_cache",
@@ -606,7 +606,7 @@
         "kind": "gainLife",
         "amount": 3
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/ring_cache.jpg"
     },
     "warp_ring": {
       "id": "warp_ring",
@@ -632,7 +632,7 @@
           "creature"
         ]
       },
-      "art": null
+      "art": "tmp/pdfs/card-art/warp_ring.jpg"
     },
     "goblin_scout": {
       "id": "goblin_scout",
