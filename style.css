@@ -163,6 +163,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #05080c; col
 .deck:hover { transform: translateY(-4px); }
 .deck.sel { border-color: #ffd24a; box-shadow: 0 0 0 4px rgba(255,210,74,.25), 0 10px 40px rgba(255,210,74,.35); transform: translateY(-6px) scale(1.03); }
 .deck-cover { display: block; width: calc(100% + 24px); height: 128px; margin: 0 -12px 12px; object-fit: cover; object-position: center 30%; border-bottom: 1px solid rgba(255,255,255,.16); -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); mask-image: linear-gradient(to bottom, #000 72%, transparent); }
+.deck-cover.emoji-cover { display: grid; place-items: center; font-size: 76px; line-height: 1; background: radial-gradient(circle at 50% 42%, #58c8ff 0 18%, #135ec2 43%, #071d55 100%); text-shadow: 0 7px 12px rgba(0,0,0,.48); }
 .deck .nm { position: relative; font-size: 26px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,.7); }
 .deck .ds { font-size: 14px; opacity: .8; margin-top: 6px; }
 .deck.R { background: linear-gradient(180deg, rgba(226,84,46,.35), rgba(90,20,12,.4)); }

@@ -61,6 +61,7 @@
     'type.creature': { ru: 'Существо', en: 'Creature' },
     'type.instant': { ru: 'Мгновенное заклинание', en: 'Instant' },
     'type.sorcery': { ru: 'Волшебство', en: 'Sorcery' },
+    'type.artifact': { ru: 'Артефакт', en: 'Artifact' },
     'kw.flying': { ru: 'Полёт', en: 'Flying' },
     'kw.haste': { ru: 'Ускорение', en: 'Haste' },
     'kw.trample': { ru: 'Пробивной удар', en: 'Trample' },

@@ -100,6 +100,540 @@
       },
       "art": "tmp/pdfs/card-art/swamp.jpg"
     },
+    "green_hill_zone": {
+      "id": "green_hill_zone",
+      "name": {
+        "ru": "Зона Зелёных Холмов",
+        "en": "Green Hill Zone"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Локация",
+        "en": "Location"
+      },
+      "color": "U",
+      "produces": "U",
+      "emoji": "🌴",
+      "text": {
+        "ru": "Поверните: добавьте одну синюю ману.",
+        "en": "Tap: add one blue mana."
+      },
+      "art": null
+    },
+    "chemical_plant_zone": {
+      "id": "chemical_plant_zone",
+      "name": {
+        "ru": "Химический завод",
+        "en": "Chemical Plant Zone"
+      },
+      "type": "land",
+      "subtype": {
+        "ru": "Локация",
+        "en": "Location"
+      },
+      "color": "R",
+      "produces": "R",
+      "emoji": "🏭",
+      "text": {
+        "ru": "Поверните: добавьте одну красную ману.",
+        "en": "Tap: add one red mana."
+      },
+      "art": null
+    },
+    "sonic_the_hedgehog": {
+      "id": "sonic_the_hedgehog",
+      "name": {
+        "ru": "Соник, синий ёж",
+        "en": "Sonic the Hedgehog"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ёж Герой",
+        "en": "Hedgehog Hero"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "haste"
+      ],
+      "emoji": "🦔",
+      "flavor": {
+        "ru": "Никто не обгонит героя, который уже мчится к цели.",
+        "en": "Nobody outruns a hero already racing toward the goal."
+      },
+      "art": null
+    },
+    "miles_tails_prower": {
+      "id": "miles_tails_prower",
+      "name": {
+        "ru": "Майлз «Тейлз» Прауэр",
+        "en": "Miles “Tails” Prower"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Лис Изобретатель",
+        "en": "Fox Inventor"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 1,
+      "toughness": 2,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🦊",
+      "text": {
+        "ru": "Когда Майлз «Тейлз» Прауэр выходит на поле битвы, возьмите карту.",
+        "en": "When Miles “Tails” Prower enters the battlefield, draw a card."
+      },
+      "etb": {
+        "kind": "draw",
+        "amount": 1
+      },
+      "art": null
+    },
+    "knuckles_the_echidna": {
+      "id": "knuckles_the_echidna",
+      "name": {
+        "ru": "Наклз, хранитель",
+        "en": "Knuckles the Echidna"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ехидна Хранитель",
+        "en": "Echidna Guardian"
+      },
+      "cost": "1R",
+      "color": "R",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "first_strike"
+      ],
+      "emoji": "🥊",
+      "flavor": {
+        "ru": "Мастер Изумруда не сдаёт пост.",
+        "en": "The Master Emerald’s guardian never leaves his post."
+      },
+      "art": null
+    },
+    "amy_rose": {
+      "id": "amy_rose",
+      "name": {
+        "ru": "Эми Роуз",
+        "en": "Amy Rose"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ёж Герой",
+        "en": "Hedgehog Hero"
+      },
+      "cost": "2R",
+      "color": "R",
+      "power": 3,
+      "toughness": 2,
+      "keywords": [
+        "haste"
+      ],
+      "emoji": "🔨",
+      "flavor": {
+        "ru": "Пико-Пико молот всегда успевает вовремя.",
+        "en": "The Piko Piko Hammer always arrives on time."
+      },
+      "art": null
+    },
+    "shadow_the_hedgehog": {
+      "id": "shadow_the_hedgehog",
+      "name": {
+        "ru": "Шэдоу, совершенная жизнь",
+        "en": "Shadow the Hedgehog"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ёж Соперник",
+        "en": "Hedgehog Rival"
+      },
+      "cost": "1UR",
+      "color": "U",
+      "power": 3,
+      "toughness": 2,
+      "keywords": [
+        "haste"
+      ],
+      "emoji": "🌑",
+      "flavor": {
+        "ru": "Хаос-контроль не терпит промедления.",
+        "en": "Chaos Control has no time for hesitation."
+      },
+      "art": null
+    },
+    "rouge_the_bat": {
+      "id": "rouge_the_bat",
+      "name": {
+        "ru": "Руж, охотница за сокровищами",
+        "en": "Rouge the Bat"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Летучая мышь Шпион",
+        "en": "Bat Spy"
+      },
+      "cost": "2U",
+      "color": "U",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "flying"
+      ],
+      "emoji": "🦇",
+      "flavor": {
+        "ru": "Сокровища лучше искать сверху.",
+        "en": "Treasures are easier to spot from above."
+      },
+      "art": null
+    },
+    "cream_and_cheese": {
+      "id": "cream_and_cheese",
+      "name": {
+        "ru": "Крим и Чиз",
+        "en": "Cream and Cheese"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Крольчиха Чао",
+        "en": "Rabbit Chao"
+      },
+      "cost": "2U",
+      "color": "U",
+      "power": 1,
+      "toughness": 3,
+      "keywords": [
+        "lifelink"
+      ],
+      "emoji": "🐰",
+      "flavor": {
+        "ru": "Маленькая помощь делает команду сильнее.",
+        "en": "A little help makes the whole team stronger."
+      },
+      "art": null
+    },
+    "blaze_the_cat": {
+      "id": "blaze_the_cat",
+      "name": {
+        "ru": "Блейз, кошка огня",
+        "en": "Blaze the Cat"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Кошка Принцесса",
+        "en": "Cat Princess"
+      },
+      "cost": "2R",
+      "color": "R",
+      "power": 3,
+      "toughness": 2,
+      "keywords": [
+        "first_strike"
+      ],
+      "emoji": "🔥",
+      "flavor": {
+        "ru": "Её пламя защищает, а не сжигает друзей.",
+        "en": "Her flame protects rather than harms her friends."
+      },
+      "art": null
+    },
+    "silver_the_hedgehog": {
+      "id": "silver_the_hedgehog",
+      "name": {
+        "ru": "Сильвер, ёж будущего",
+        "en": "Silver the Hedgehog"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Ёж Психокинетик",
+        "en": "Hedgehog Psychokinetic"
+      },
+      "cost": "2U",
+      "color": "U",
+      "power": 2,
+      "toughness": 2,
+      "keywords": [
+        "flash"
+      ],
+      "emoji": "🌀",
+      "text": {
+        "ru": "Когда Сильвер выходит на поле битвы, поверните целевое существо. Оно пропускает разворот.",
+        "en": "When Silver enters the battlefield, tap target creature. It skips its untap."
+      },
+      "etb": {
+        "kind": "tap",
+        "skipUntap": 1,
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": null
+    },
+    "vector_the_crocodile": {
+      "id": "vector_the_crocodile",
+      "name": {
+        "ru": "Вектор, детектив",
+        "en": "Vector the Crocodile"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Крокодил Детектив",
+        "en": "Crocodile Detective"
+      },
+      "cost": "3R",
+      "color": "R",
+      "power": 3,
+      "toughness": 4,
+      "keywords": [],
+      "emoji": "🐊",
+      "flavor": {
+        "ru": "Дело раскрыто, когда команда держится вместе.",
+        "en": "A case is cracked when the team sticks together."
+      },
+      "art": null
+    },
+    "espio_the_chameleon": {
+      "id": "espio_the_chameleon",
+      "name": {
+        "ru": "Эспио, ниндзя-хамелеон",
+        "en": "Espio the Chameleon"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Хамелеон Ниндзя",
+        "en": "Chameleon Ninja"
+      },
+      "cost": "1U",
+      "color": "U",
+      "power": 2,
+      "toughness": 1,
+      "keywords": [
+        "hexproof"
+      ],
+      "emoji": "🦎",
+      "flavor": {
+        "ru": "Его почти невозможно заметить до удара.",
+        "en": "He is almost impossible to spot before the strike."
+      },
+      "art": null
+    },
+    "charmy_bee": {
+      "id": "charmy_bee",
+      "name": {
+        "ru": "Чарми, пчёлка",
+        "en": "Charmy Bee"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Пчела Герой",
+        "en": "Bee Hero"
+      },
+      "cost": "1R",
+      "color": "R",
+      "power": 1,
+      "toughness": 1,
+      "keywords": [
+        "flying",
+        "haste"
+      ],
+      "emoji": "🐝",
+      "flavor": {
+        "ru": "Самый маленький детектив — самый быстрый.",
+        "en": "The smallest detective is the fastest."
+      },
+      "art": null
+    },
+    "big_the_cat": {
+      "id": "big_the_cat",
+      "name": {
+        "ru": "Биг, рыбак",
+        "en": "Big the Cat"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Кот Рыбак",
+        "en": "Cat Fisher"
+      },
+      "cost": "3U",
+      "color": "U",
+      "power": 3,
+      "toughness": 4,
+      "keywords": [
+        "trample"
+      ],
+      "emoji": "🎣",
+      "flavor": {
+        "ru": "Фрог всегда знает короткий путь.",
+        "en": "Froggy always knows the shortcut."
+      },
+      "art": null
+    },
+    "doctor_eggman": {
+      "id": "doctor_eggman",
+      "name": {
+        "ru": "Доктор Эггман",
+        "en": "Doctor Eggman"
+      },
+      "type": "creature",
+      "subtype": {
+        "ru": "Человек Учёный",
+        "en": "Human Scientist"
+      },
+      "cost": "3R",
+      "color": "R",
+      "power": 3,
+      "toughness": 3,
+      "keywords": [],
+      "emoji": "🤖",
+      "text": {
+        "ru": "Когда Доктор Эггман выходит на поле битвы, он наносит 2 повреждения любой цели.",
+        "en": "When Doctor Eggman enters the battlefield, he deals 2 damage to any target."
+      },
+      "etb": {
+        "kind": "damage",
+        "amount": 2,
+        "targets": [
+          "any"
+        ]
+      },
+      "art": null
+    },
+    "power_sneakers": {
+      "id": "power_sneakers",
+      "name": {
+        "ru": "Силовые кроссовки",
+        "en": "Power Sneakers"
+      },
+      "type": "artifact",
+      "subtype": {
+        "ru": "Снаряжение",
+        "en": "Equipment"
+      },
+      "cost": "2",
+      "color": "U",
+      "emoji": "👟",
+      "text": {
+        "ru": "Ваши существа с Ускорением получают +1/+0.",
+        "en": "Your creatures with Haste get +1/+0."
+      },
+      "staticBoost": {
+        "target": "hasteCreature",
+        "power": 1,
+        "toughness": 0
+      },
+      "art": null
+    },
+    "shield_monitor": {
+      "id": "shield_monitor",
+      "name": {
+        "ru": "Монитор щита",
+        "en": "Shield Monitor"
+      },
+      "type": "artifact",
+      "subtype": {
+        "ru": "Монитор",
+        "en": "Monitor"
+      },
+      "cost": "2",
+      "color": "U",
+      "emoji": "🛡️",
+      "text": {
+        "ru": "Ваши существа получают +0/+1.",
+        "en": "Your creatures get +0/+1."
+      },
+      "staticBoost": {
+        "target": "creature",
+        "power": 0,
+        "toughness": 1
+      },
+      "art": null
+    },
+    "chaos_emerald": {
+      "id": "chaos_emerald",
+      "name": {
+        "ru": "Изумруд Хаоса",
+        "en": "Chaos Emerald"
+      },
+      "type": "artifact",
+      "subtype": {
+        "ru": "Изумруд",
+        "en": "Emerald"
+      },
+      "cost": "3",
+      "color": "U",
+      "emoji": "💎",
+      "text": {
+        "ru": "Ваши синие и красные существа получают +1/+1.",
+        "en": "Your blue and red creatures get +1/+1."
+      },
+      "staticBoost": {
+        "target": "creature",
+        "colors": [
+          "U",
+          "R"
+        ],
+        "power": 1,
+        "toughness": 1
+      },
+      "art": null
+    },
+    "ring_cache": {
+      "id": "ring_cache",
+      "name": {
+        "ru": "Тайник колец",
+        "en": "Ring Cache"
+      },
+      "type": "artifact",
+      "subtype": {
+        "ru": "Кольцо",
+        "en": "Ring"
+      },
+      "cost": "1",
+      "color": "U",
+      "emoji": "🟡",
+      "text": {
+        "ru": "Когда Тайник колец выходит на поле битвы, вы получаете 3 жизни.",
+        "en": "When Ring Cache enters the battlefield, you gain 3 life."
+      },
+      "etb": {
+        "kind": "gainLife",
+        "amount": 3
+      },
+      "art": null
+    },
+    "warp_ring": {
+      "id": "warp_ring",
+      "name": {
+        "ru": "Кольцо-портал",
+        "en": "Warp Ring"
+      },
+      "type": "artifact",
+      "subtype": {
+        "ru": "Кольцо",
+        "en": "Ring"
+      },
+      "cost": "2",
+      "color": "U",
+      "emoji": "⭕",
+      "text": {
+        "ru": "Когда Кольцо-портал выходит на поле битвы, верните целевое существо в руку его владельца.",
+        "en": "When Warp Ring enters the battlefield, return target creature to its owner's hand."
+      },
+      "etb": {
+        "kind": "bounce",
+        "targets": [
+          "creature"
+        ]
+      },
+      "art": null
+    },
     "goblin_scout": {
       "id": "goblin_scout",
       "name": {
@@ -1543,6 +2077,62 @@
         "healing_salve",
         "healing_salve",
         "ethereal_haze"
+      ]
+    },
+    "sonic": {
+      "id": "sonic",
+      "name": {
+        "ru": "Соник",
+        "en": "Sonic the Hedgehog"
+      },
+      "color": "U",
+      "emoji": "🦔",
+      "cover": "emoji",
+      "desc": {
+        "ru": "Скорость, команда и гаджеты. Разгоняйте героев и контролируйте темп.",
+        "en": "Speed, teamwork and gadgets. Power up your heroes and control the pace."
+      },
+      "cards": [
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "green_hill_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "chemical_plant_zone",
+        "sonic_the_hedgehog",
+        "sonic_the_hedgehog",
+        "miles_tails_prower",
+        "miles_tails_prower",
+        "knuckles_the_echidna",
+        "knuckles_the_echidna",
+        "amy_rose",
+        "amy_rose",
+        "shadow_the_hedgehog",
+        "rouge_the_bat",
+        "cream_and_cheese",
+        "blaze_the_cat",
+        "silver_the_hedgehog",
+        "vector_the_crocodile",
+        "espio_the_chameleon",
+        "charmy_bee",
+        "big_the_cat",
+        "doctor_eggman",
+        "power_sneakers",
+        "shield_monitor",
+        "chaos_emerald",
+        "ring_cache",
+        "warp_ring"
       ]
     }
   }

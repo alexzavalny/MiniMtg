@@ -87,6 +87,7 @@
     const lifeGains = byKind('gainLife');
     const fogs = byKind('preventCombatDamage');
     const flashCreatures = castable.filter((c) => c.def.type === 'creature' && g.hasKw(c, 'flash')).sort((a, b) => MTG.cmc(b.def) - MTG.cmc(a.def));
+      const artifacts = castable.filter((c) => c.def.type === 'artifact').sort((a, b) => MTG.cmc(a.def) - MTG.cmc(b.def));
     const bestKillable = (amount, minValue) => {
       const cands = oppCreatures.filter((c) => g.getToughness(c) - c.damage <= amount);
       cands.sort((a, b) => value(g, b) - value(g, a));
@@ -140,6 +141,7 @@
         // no attackers anyway -> just play it now so the kid sees things happen
         if (!myCreatures.some((c) => g.canAttack(c))) return cast(creatures[0]);
       }
+      if (artifacts.length) return cast(artifacts[0]);
       if (ph === 'main2') {
         const axe = faceBurn.find((c) => c.def.effect.targets[0] === 'player');
         if (axe && (opp.life <= 12 || creatures.length === 0)) return cast(axe, [T.player(1 - p)]);

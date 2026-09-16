@@ -360,7 +360,10 @@
         const el = document.createElement('div');
         el.className = 'deck ' + d.color + (d.id === chosen ? ' sel' : '');
         el.dataset.id = d.id;
-        el.innerHTML = `<img class="deck-cover" src="assets/deck-covers/${d.id}.png" alt=""><div class="nm">${MTG.txt(d.name)}</div><div class="ds">${MTG.txt(d.desc)}</div>`;
+        const cover = d.cover === 'emoji'
+          ? `<div class="deck-cover emoji-cover" aria-hidden="true">${d.emoji}</div>`
+          : `<img class="deck-cover" src="assets/deck-covers/${d.id}.png" alt="">`;
+        el.innerHTML = `${cover}<div class="nm">${MTG.txt(d.name)}</div><div class="ds">${MTG.txt(d.desc)}</div>`;
         el.addEventListener('click', () => { chosen = d.id; picker.querySelectorAll('.deck').forEach((x) => x.classList.toggle('sel', x === el)); MTG.Sfx.unlock(); MTG.Sfx.play('click'); });
         picker.appendChild(el);
       }

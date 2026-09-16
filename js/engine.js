@@ -88,9 +88,22 @@
       }
     }
     hasKw(card, kw) { return !!(card.def.keywords && card.def.keywords.includes(kw)); }
-    getPower(card) { return card.def.power + card.buffs.reduce((s, b) => s + b.power, 0) + card.counters.reduce((s, c) => s + c.power, 0); }
-    getToughness(card) { return card.def.toughness + card.buffs.reduce((s, b) => s + b.toughness, 0) + card.counters.reduce((s, c) => s + c.toughness, 0); }
+    staticBoost(card) {
+      if (!this.isCreature(card)) return { power: 0, toughness: 0 };
+      const total = { power: 0, toughness: 0 };
+      for (const permanent of this.players[card.controller].battlefield) {
+        const boost = permanent.def.staticBoost;
+        if (!boost || (boost.target === 'hasteCreature' && !this.hasKw(card, 'haste'))) continue;
+        if (boost.target && boost.target !== 'creature' && boost.target !== 'hasteCreature') continue;
+        if (boost.colors && !boost.colors.includes(card.def.color)) continue;
+        total.power += boost.power || 0; total.toughness += boost.toughness || 0;
+      }
+      return total;
+    }
+    getPower(card) { const b = this.staticBoost(card); return card.def.power + b.power + card.buffs.reduce((s, x) => s + x.power, 0) + card.counters.reduce((s, x) => s + x.power, 0); }
+    getToughness(card) { const b = this.staticBoost(card); return card.def.toughness + b.toughness + card.buffs.reduce((s, x) => s + x.toughness, 0) + card.counters.reduce((s, x) => s + x.toughness, 0); }
     isCreature(card) { return card.def.type === 'creature'; }
+    isPermanent(card) { return card.def.type === 'creature' || card.def.type === 'artifact'; }
     creatures(p) { return this.players[p].battlefield.filter((c) => this.isCreature(c)); }
     lands(p) { return this.players[p].battlefield.filter((c) => c.def.type === 'land'); }
     isProtectedFrom(card, source) { return !!(card && source && card.def.protection && card.def.protection.includes(source.def.color)); }
@@ -275,7 +288,7 @@
           await this.checkSBA();
           return;
         }
-        if (card.def.type === 'creature') {
+        if (this.isPermanent(card)) {
           await this.moveToBattlefield(card, p);
           await this.log('log.enters', { card: card.def.name });
           if (card.def.etb) await this.queueTrigger(card, p, card.def.etb);
@@ -574,7 +587,12 @@
       if (this.over) return;
       let p = this.active;
       let passes = 0;
+      // A legal priority round is bounded by the cards in players' hands. If an
+      // AI response ever becomes stale or invalid, do not spin forever and pin
+      // a CPU core: abort the game with enough context to reproduce the fault.
+      let decisions = 0;
       for (;;) {
+        if (++decisions > 200) throw new Error(`priority loop exceeded 200 decisions in ${this.phase}`);
         const req = this.buildPriorityRequest(p);
         let resp;
         if (this.shouldAutoPass(p, req)) resp = { action: 'pass' };

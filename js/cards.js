@@ -23,6 +23,56 @@
   def({ id: 'swamp', name: L('Болото', 'Swamp'), type: 'land', subtype: L('Болото', 'Swamp'), color: 'B', produces: 'B', emoji: '💀',
     text: L('Поверните: добавьте одну чёрную ману.', 'Tap: add one black mana.') });
 
+  // SONIC — blue-red speed, teamwork and gadgetry. These cards deliberately
+  // use the canvas emoji fallback rather than external character artwork.
+  def({ id: 'green_hill_zone', name: L('Зона Зелёных Холмов', 'Green Hill Zone'), type: 'land', subtype: L('Локация', 'Location'), color: 'U', produces: 'U', emoji: '🌴',
+    text: L('Поверните: добавьте одну синюю ману.', 'Tap: add one blue mana.') });
+  def({ id: 'chemical_plant_zone', name: L('Химический завод', 'Chemical Plant Zone'), type: 'land', subtype: L('Локация', 'Location'), color: 'R', produces: 'R', emoji: '🏭',
+    text: L('Поверните: добавьте одну красную ману.', 'Tap: add one red mana.') });
+
+  def({ id: 'sonic_the_hedgehog', name: L('Соник, синий ёж', 'Sonic the Hedgehog'), type: 'creature', subtype: L('Ёж Герой', 'Hedgehog Hero'), cost: '1U', color: 'U',
+    power: 2, toughness: 2, keywords: ['haste'], emoji: '🦔', flavor: L('Никто не обгонит героя, который уже мчится к цели.', 'Nobody outruns a hero already racing toward the goal.') });
+  def({ id: 'miles_tails_prower', name: L('Майлз «Тейлз» Прауэр', 'Miles “Tails” Prower'), type: 'creature', subtype: L('Лис Изобретатель', 'Fox Inventor'), cost: '1U', color: 'U',
+    power: 1, toughness: 2, keywords: ['flying'], emoji: '🦊', text: L('Когда Майлз «Тейлз» Прауэр выходит на поле битвы, возьмите карту.', 'When Miles “Tails” Prower enters the battlefield, draw a card.'),
+    etb: { kind: 'draw', amount: 1 } });
+  def({ id: 'knuckles_the_echidna', name: L('Наклз, хранитель', 'Knuckles the Echidna'), type: 'creature', subtype: L('Ехидна Хранитель', 'Echidna Guardian'), cost: '1R', color: 'R',
+    power: 2, toughness: 2, keywords: ['first_strike'], emoji: '🥊', flavor: L('Мастер Изумруда не сдаёт пост.', 'The Master Emerald’s guardian never leaves his post.') });
+  def({ id: 'amy_rose', name: L('Эми Роуз', 'Amy Rose'), type: 'creature', subtype: L('Ёж Герой', 'Hedgehog Hero'), cost: '2R', color: 'R',
+    power: 3, toughness: 2, keywords: ['haste'], emoji: '🔨', flavor: L('Пико-Пико молот всегда успевает вовремя.', 'The Piko Piko Hammer always arrives on time.') });
+  def({ id: 'shadow_the_hedgehog', name: L('Шэдоу, совершенная жизнь', 'Shadow the Hedgehog'), type: 'creature', subtype: L('Ёж Соперник', 'Hedgehog Rival'), cost: '1UR', color: 'U',
+    power: 3, toughness: 2, keywords: ['haste'], emoji: '🌑', flavor: L('Хаос-контроль не терпит промедления.', 'Chaos Control has no time for hesitation.') });
+  def({ id: 'rouge_the_bat', name: L('Руж, охотница за сокровищами', 'Rouge the Bat'), type: 'creature', subtype: L('Летучая мышь Шпион', 'Bat Spy'), cost: '2U', color: 'U',
+    power: 2, toughness: 2, keywords: ['flying'], emoji: '🦇', flavor: L('Сокровища лучше искать сверху.', 'Treasures are easier to spot from above.') });
+  def({ id: 'cream_and_cheese', name: L('Крим и Чиз', 'Cream and Cheese'), type: 'creature', subtype: L('Крольчиха Чао', 'Rabbit Chao'), cost: '2U', color: 'U',
+    power: 1, toughness: 3, keywords: ['lifelink'], emoji: '🐰', flavor: L('Маленькая помощь делает команду сильнее.', 'A little help makes the whole team stronger.') });
+  def({ id: 'blaze_the_cat', name: L('Блейз, кошка огня', 'Blaze the Cat'), type: 'creature', subtype: L('Кошка Принцесса', 'Cat Princess'), cost: '2R', color: 'R',
+    power: 3, toughness: 2, keywords: ['first_strike'], emoji: '🔥', flavor: L('Её пламя защищает, а не сжигает друзей.', 'Her flame protects rather than harms her friends.') });
+  def({ id: 'silver_the_hedgehog', name: L('Сильвер, ёж будущего', 'Silver the Hedgehog'), type: 'creature', subtype: L('Ёж Психокинетик', 'Hedgehog Psychokinetic'), cost: '2U', color: 'U',
+    power: 2, toughness: 2, keywords: ['flash'], emoji: '🌀', text: L('Когда Сильвер выходит на поле битвы, поверните целевое существо. Оно пропускает разворот.', 'When Silver enters the battlefield, tap target creature. It skips its untap.'),
+    etb: { kind: 'tap', skipUntap: 1, targets: ['creature'] } });
+  def({ id: 'vector_the_crocodile', name: L('Вектор, детектив', 'Vector the Crocodile'), type: 'creature', subtype: L('Крокодил Детектив', 'Crocodile Detective'), cost: '3R', color: 'R',
+    power: 3, toughness: 4, keywords: [], emoji: '🐊', flavor: L('Дело раскрыто, когда команда держится вместе.', 'A case is cracked when the team sticks together.') });
+  def({ id: 'espio_the_chameleon', name: L('Эспио, ниндзя-хамелеон', 'Espio the Chameleon'), type: 'creature', subtype: L('Хамелеон Ниндзя', 'Chameleon Ninja'), cost: '1U', color: 'U',
+    power: 2, toughness: 1, keywords: ['hexproof'], emoji: '🦎', flavor: L('Его почти невозможно заметить до удара.', 'He is almost impossible to spot before the strike.') });
+  def({ id: 'charmy_bee', name: L('Чарми, пчёлка', 'Charmy Bee'), type: 'creature', subtype: L('Пчела Герой', 'Bee Hero'), cost: '1R', color: 'R',
+    power: 1, toughness: 1, keywords: ['flying', 'haste'], emoji: '🐝', flavor: L('Самый маленький детектив — самый быстрый.', 'The smallest detective is the fastest.') });
+  def({ id: 'big_the_cat', name: L('Биг, рыбак', 'Big the Cat'), type: 'creature', subtype: L('Кот Рыбак', 'Cat Fisher'), cost: '3U', color: 'U',
+    power: 3, toughness: 4, keywords: ['trample'], emoji: '🎣', flavor: L('Фрог всегда знает короткий путь.', 'Froggy always knows the shortcut.') });
+  def({ id: 'doctor_eggman', name: L('Доктор Эггман', 'Doctor Eggman'), type: 'creature', subtype: L('Человек Учёный', 'Human Scientist'), cost: '3R', color: 'R',
+    power: 3, toughness: 3, keywords: [], emoji: '🤖', text: L('Когда Доктор Эггман выходит на поле битвы, он наносит 2 повреждения любой цели.', 'When Doctor Eggman enters the battlefield, he deals 2 damage to any target.'),
+    etb: { kind: 'damage', amount: 2, targets: ['any'] } });
+
+  def({ id: 'power_sneakers', name: L('Силовые кроссовки', 'Power Sneakers'), type: 'artifact', subtype: L('Снаряжение', 'Equipment'), cost: '2', color: 'U', emoji: '👟',
+    text: L('Ваши существа с Ускорением получают +1/+0.', 'Your creatures with Haste get +1/+0.'), staticBoost: { target: 'hasteCreature', power: 1, toughness: 0 } });
+  def({ id: 'shield_monitor', name: L('Монитор щита', 'Shield Monitor'), type: 'artifact', subtype: L('Монитор', 'Monitor'), cost: '2', color: 'U', emoji: '🛡️',
+    text: L('Ваши существа получают +0/+1.', 'Your creatures get +0/+1.'), staticBoost: { target: 'creature', power: 0, toughness: 1 } });
+  def({ id: 'chaos_emerald', name: L('Изумруд Хаоса', 'Chaos Emerald'), type: 'artifact', subtype: L('Изумруд', 'Emerald'), cost: '3', color: 'U', emoji: '💎',
+    text: L('Ваши синие и красные существа получают +1/+1.', 'Your blue and red creatures get +1/+1.'), staticBoost: { target: 'creature', colors: ['U', 'R'], power: 1, toughness: 1 } });
+  def({ id: 'ring_cache', name: L('Тайник колец', 'Ring Cache'), type: 'artifact', subtype: L('Кольцо', 'Ring'), cost: '1', color: 'U', emoji: '🟡',
+    text: L('Когда Тайник колец выходит на поле битвы, вы получаете 3 жизни.', 'When Ring Cache enters the battlefield, you gain 3 life.'), etb: { kind: 'gainLife', amount: 3 } });
+  def({ id: 'warp_ring', name: L('Кольцо-портал', 'Warp Ring'), type: 'artifact', subtype: L('Кольцо', 'Ring'), cost: '2', color: 'U', emoji: '⭕',
+    text: L('Когда Кольцо-портал выходит на поле битвы, верните целевое существо в руку его владельца.', 'When Warp Ring enters the battlefield, return target creature to its owner\'s hand.'), etb: { kind: 'bounce', targets: ['creature'] } });
+
   // RED
   def({ id: 'goblin_scout', name: L('Гоблин-разведчик', 'Goblin Scout'), type: 'creature', subtype: L('Гоблин', 'Goblin'), cost: 'R', color: 'R',
     power: 1, toughness: 1, keywords: ['haste'], emoji: '👺', flavor: L('Быстрый, злой и очень громкий.', 'Fast, angry and very loud.') });
@@ -207,6 +257,14 @@
       desc: L('Русалки, лечение и защитные чары. Берегите своих и замедляйте врага.', 'Merfolk, healing and protective magic. Keep yours safe and slow the enemy.'),
       cards: list([['island', 9], ['plains', 8], ['coral_healer', 4], ['silvergill_adept', 4], ['tideguard_mermaid', 3],
         ['watertrap_weaver', 3], ['tide_seraph', 2], ['frost_breath', 3], ['healing_salve', 3], ['ethereal_haze', 1]]),
+    },
+    sonic: {
+      id: 'sonic', name: L('Соник', 'Sonic the Hedgehog'), color: 'U', emoji: '🦔', cover: 'emoji',
+      desc: L('Скорость, команда и гаджеты. Разгоняйте героев и контролируйте темп.', 'Speed, teamwork and gadgets. Power up your heroes and control the pace.'),
+      cards: list([['green_hill_zone', 9], ['chemical_plant_zone', 8], ['sonic_the_hedgehog', 2], ['miles_tails_prower', 2], ['knuckles_the_echidna', 2], ['amy_rose', 2],
+        ['shadow_the_hedgehog', 1], ['rouge_the_bat', 1], ['cream_and_cheese', 1], ['blaze_the_cat', 1], ['silver_the_hedgehog', 1], ['vector_the_crocodile', 1],
+        ['espio_the_chameleon', 1], ['charmy_bee', 1], ['big_the_cat', 1], ['doctor_eggman', 1], ['power_sneakers', 1], ['shield_monitor', 1],
+        ['chaos_emerald', 1], ['ring_cache', 1], ['warp_ring', 1]]),
     },
   };
 
